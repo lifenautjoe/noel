@@ -4,6 +4,12 @@
 import { NoelEventListener, NoelEventMiddleware, NoelMiddleware } from './types';
 
 export interface Noel {
+    enable(): void;
+
+    disable(): void;
+
+    isEnabled(): boolean;
+
     replayIsEnabled(): boolean;
 
     enableReplay(): void;
@@ -12,11 +18,9 @@ export interface Noel {
 
     setReplayBufferAmount(buffer: number): void;
 
-    getReplayBufferForEvent(eventName: string): Array<any>;
-
     clearReplayBufferForEvent(eventName: string): void;
 
-    clearReplayBuffer(): void;
+    clearEventsReplayBuffers(): void;
 
     setSupportedEvents(supportedEvents: Array<string>): void;
 
@@ -45,15 +49,20 @@ export interface Noel {
     useMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
 
     removeMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): void;
-
-    getChild(): Noel;
 }
 
 export interface NoelConfig {
+    enabled?: boolean;
     replay?: boolean;
     replayBufferAmount?: number;
     supportedEvents?: Array<string>;
     unsupportedEventWarning?: boolean;
+}
+
+export interface NoelEventData {
+    replayBuffer: Array<any>;
+    listeners: Array<Function>;
+    middlewares: Array<NoelEventMiddleware>;
 }
 
 export interface NoelEventManager {
