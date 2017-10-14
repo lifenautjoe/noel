@@ -60,7 +60,7 @@ export interface NoelConfig {
 }
 
 export interface NoelEventData {
-    replayBuffer: Array<any>;
+    replayBuffer: Array<any> | null;
     listeners: Array<Function>;
     middlewares: Array<NoelEventMiddleware>;
 }
