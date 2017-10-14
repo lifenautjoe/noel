@@ -85,7 +85,7 @@ export class NoelImp implements Noel {
     clearEventsReplayBuffers() {
         const eventsData = this.getEventsData();
         for (const eventData of eventsData) {
-            delete eventData.replayBuffer;
+            eventData.replayBuffer = null;
         }
     }
 
@@ -95,11 +95,11 @@ export class NoelImp implements Noel {
     }
 
     private trimEventsReplayBuffers(replayBufferAmountToTrimTo: number) {
+        if (!this.replayEnabled) return;
         const eventsData = this.getEventsData();
         for (const eventData of eventsData) {
             const eventReplayBuffer = eventData.replayBuffer;
-            const trimmedEventBuffer = eventReplayBuffer.slice(0, replayBufferAmountToTrimTo);
-            eventData.replayBuffer = trimmedEventBuffer;
+            if (eventReplayBuffer) eventData.replayBuffer = eventReplayBuffer.slice(0, replayBufferAmountToTrimTo);
         }
     }
 
