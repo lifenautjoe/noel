@@ -1,7 +1,7 @@
 /**
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
-import { EventListener, NoelEventMiddleware, NoelMiddleware } from './types';
+import { NoelEventListener, NoelEventMiddleware, NoelMiddleware } from './types';
 
 export interface Noel {
     enableReplay(): void;
@@ -9,6 +9,12 @@ export interface Noel {
     disableReplay(): void;
 
     setReplayBuffer(buffer: number): void;
+
+    getReplayBufferForEvent(eventName: string): Array<any>;
+
+    clearReplayBufferForEvent(eventName: string): void;
+
+    clearReplayBuffer(): void;
 
     setSupportedEvents(): void;
 
@@ -20,11 +26,11 @@ export interface Noel {
 
     disableUnsupportedEventWarning(): void;
 
-    on(eventName: string, listener: EventListener): NoelEventListenerManager;
+    on(eventName: string, listener: NoelEventListener): NoelEventListenerManager;
 
     emit(...args: Array<any>): void;
 
-    removeListener(eventName: string, listener: EventListener): void;
+    removeListener(eventName: string, listener: NoelEventListener): void;
 
     getEventManager(eventName: string): NoelEventManager;
 
@@ -32,9 +38,9 @@ export interface Noel {
 
     removeMiddleware(middleware: NoelMiddleware): void;
 
-    useEventMiddleware(eventName: string, middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
+    useMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
 
-    removeEventMiddleware(eventName: string, middleware: NoelEventMiddleware): void;
+    removeMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): void;
 
     getChild(): Noel;
 }
@@ -45,9 +51,17 @@ export interface NoelConfig {
 }
 
 export interface NoelEventManager {
-    on(eventName: string, listener: EventListener): NoelEventListenerManager;
+    on(eventName: string, listener: NoelEventListener): NoelEventListenerManager;
 
     emit(...args: Array<any>): void;
+
+    getReplayBuffer(eventName: string): Array<any>;
+
+    clearReplayBuffer(eventName: string): void;
+
+    useMiddleware(middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
+
+    removeMiddleware(middleware: NoelEventMiddleware): void;
 }
 
 export interface NoelEventListenerManager {
