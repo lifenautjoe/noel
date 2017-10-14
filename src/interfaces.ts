@@ -16,11 +16,13 @@ export interface Noel {
 
     clearReplayBuffer(): void;
 
-    setSupportedEvents(): void;
+    setSupportedEvents(supportedEvents: Array<string>): void;
 
-    addSupportedEvent(): void;
+    addSupportedEvent(eventName: string): void;
 
-    removeSupportedEvent(): void;
+    removeSupportedEvent(eventName: string): void;
+
+    eventIsSupported(eventName: string): boolean;
 
     enableUnsupportedEventWarning(): void;
 
@@ -46,8 +48,10 @@ export interface Noel {
 }
 
 export interface NoelConfig {
-    replay: boolean;
-    replayBuffer: number;
+    replay?: boolean;
+    replayBuffer?: number;
+    supportedEvents?: Array<string>;
+    unsupportedEventWarning?: boolean;
 }
 
 export interface NoelEventManager {
