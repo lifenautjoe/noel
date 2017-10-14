@@ -2,18 +2,23 @@
 // import "core-js/fn/array.find"
 // ...
 
-import { Noel, NoelConfig } from './interfaces';
+import { Noel, NoelConfig, NoelEventData } from './interfaces';
 
 export class NoelImp implements Noel {
-    private supportedEvents: Set<string>;
+    private enabled: boolean;
     private unsupportedEventWarning: boolean;
-    private eventsReplayBuffers: Map<string, Array<any>>;
+
+    private supportedEvents: Set<string>;
+    private events: Map<string, NoelEventData>;
 
     private replayEnabled: boolean;
     private replayBufferAmount: number;
 
     constructor(config?: NoelConfig) {
         config = config || {};
+
+        const enabled = typeof config.enabled === 'undefined' ? true : config.enabled;
+        enabled ? this.enable() : this.disable();
 
         const replayEnabled = config.replay || false;
         replayEnabled ? this.enableReplay() : this.disableReplay();
@@ -24,12 +29,21 @@ export class NoelImp implements Noel {
         config.unsupportedEventWarning ? this.enableUnsupportedEventWarning() : this.disableUnsupportedEventWarning();
     }
 
+    enable() {
+        this.enabled = true;
+    }
+
+    disable() {
+        this.enabled = false;
+    }
+
     addSupportedEvent(eventName: string) {
         this.supportedEvents.add(eventName);
     }
 
     removeSupportedEvent(eventName: string) {
         this.supportedEvents.delete(eventName);
+        this.events.delete(eventName);
     }
 
     setSupportedEvents(supportedEvents: Array<string>) {
@@ -55,45 +69,42 @@ export class NoelImp implements Noel {
     enableReplay() {
         if (this.replayEnabled) return;
         this.replayEnabled = true;
-        this.clearReplayBuffer();
     }
 
     disableReplay() {
         if (!this.replayEnabled) return;
         this.replayEnabled = false;
-        this.removeEventsReplayBuffers();
+        this.clearEventsReplayBuffers();
     }
 
     setReplayBufferAmount(replayBufferAmount: number) {
         this.replayBufferAmount = replayBufferAmount;
-        this.trimReplayBuffer(this.replayBufferAmount);
+        this.trimEventsReplayBuffers(this.replayBufferAmount);
     }
 
-    getReplayBufferForEvent(eventName: string) {
-        this.eventsReplayBuffers.get(eventName);
+    clearEventsReplayBuffers() {
+        const eventsData = this.getEventsData();
+        for (const eventData of eventsData) {
+            delete eventData.replayBuffer;
+        }
     }
 
     clearReplayBufferForEvent(eventName: string) {
-        this.eventsReplayBuffers.delete(eventName);
+        const eventData = this.events.get(eventName);
+        if (eventData) delete eventData.replayBuffer;
     }
 
-    clearReplayBuffer() {
-        this.eventsReplayBuffers = new Map();
+    private trimEventsReplayBuffers(replayBufferAmountToTrimTo: number) {
+        const eventsData = this.getEventsData();
+        for (const eventData of eventsData) {
+            const eventReplayBuffer = eventData.replayBuffer;
+            const trimmedEventBuffer = eventReplayBuffer.slice(0, replayBufferAmountToTrimTo);
+            eventData.replayBuffer = trimmedEventBuffer;
+        }
     }
 
-    private removeEventsReplayBuffers() {
-        delete this.eventsReplayBuffers;
-    }
-
-    private trimReplayBuffer(replayBufferAmountToTrimTo: number) {
-        this.eventsReplayBuffers.forEach((eventBuffer, eventName) => {
-            const trimmedEventBuffer = eventBuffer.slice(0, replayBufferAmountToTrimTo);
-            this.setReplayBufferForEvent(eventName, trimmedEventBuffer);
-        });
-    }
-
-    private setReplayBufferForEvent(eventName: string, replayBuffer: Array<any>) {
-        this.eventsReplayBuffers.set(eventName, replayBuffer);
+    private getEventsData(): IterableIterator<NoelEventData> {
+        return this.events.values();
     }
 }
 
@@ -103,4 +114,4 @@ export * from './interfaces';
 
 export * from './types';
 
-export default new NoelImp();
+export default NoelImp;
