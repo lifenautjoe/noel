@@ -6,11 +6,15 @@ import { Noel, NoelConfig } from './interfaces';
 
 export class NoelImp implements Noel {
     private supportedEvents: Set<string>;
+    private unsupportedEventWarning: boolean;
 
     constructor(config?: NoelConfig) {
         config = config || {};
+
         const supportedEvents = config.supportedEvents || [];
         this.setSupportedEvents(supportedEvents);
+
+        config.unsupportedEventWarning ? this.enableUnsupportedEventWarning() : this.disableUnsupportedEventWarning();
     }
 
     addSupportedEvent(eventName: string) {
@@ -27,6 +31,14 @@ export class NoelImp implements Noel {
 
     eventIsSupported(eventName: string) {
         return this.supportedEvents.has(eventName);
+    }
+
+    enableUnsupportedEventWarning() {
+        this.unsupportedEventWarning = true;
+    }
+
+    disableUnsupportedEventWarning() {
+        this.unsupportedEventWarning = false;
     }
 }
 
