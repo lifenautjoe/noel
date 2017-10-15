@@ -108,10 +108,17 @@ export class NoelEventImp implements NoelEvent {
 
     private emitNormally(listeners: Set<NoelEventListener>, eventArgs: Array<any>) {
         listeners.forEach(listener => listener(...eventArgs));
+        if (this.replayEnabled) this.pushEventArgsToReplayBuffer(eventArgs);
     }
 
     private getListeners(): Set<NoelEventListener> {
         return this.listeners || (this.listeners = new Set<NoelEventListener>());
+    }
+
+    private pushEventArgsToReplayBuffer(eventArgs: Array<any>) {
+        const replayBuffer = this.getReplayBuffer();
+        replayBuffer.push(eventArgs);
+        if (replayBuffer.length > this.replayBufferSize) replayBuffer.shift();
     }
 
     private getReplayBuffer(): Array<any> {
