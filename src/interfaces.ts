@@ -1,7 +1,7 @@
 /**
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
-import { NoelEventListener, NoelEventMiddleware, NoelEventMiddlewareNextExecutor, NoelMiddleware } from './types';
+import { NoelEventListener, NoelEventMiddleware, NoelEventMiddlewareNextExecutor } from './types';
 
 export interface Noel {
     enable(): void;
@@ -42,9 +42,9 @@ export interface Noel {
 
     getEvent(eventName: string): NoelEvent;
 
-    useMiddleware(middleware: NoelMiddleware): NoelMiddlewareManager;
+    useMiddleware(middleware: NoelEventMiddleware): NoelMiddlewareManager;
 
-    removeMiddleware(middleware: NoelMiddleware): void;
+    removeMiddleware(middleware: NoelEventMiddleware): void;
 
     useMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
 
@@ -101,6 +101,8 @@ export interface NoelEvent {
     on(listener: NoelEventListener): NoelEventListenerManager;
 
     removeListener(listener: NoelEventListener): void;
+
+    countListeners(): number;
 
     useMiddleware(middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
 
