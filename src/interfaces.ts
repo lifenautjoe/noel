@@ -76,9 +76,13 @@ export interface NoelEventEmission {
 
     next(...eventArgs: Array<void>): void;
 
-    args(): Array<any>;
+    getEventArgs(): Array<any>;
+
+    getEventName(): string;
 
     abort(reason: Error): void;
+
+    digestMiddlewares(): void;
 }
 
 export interface NoelEventMiddlewareManager extends NoelMiddlewareManager {}
