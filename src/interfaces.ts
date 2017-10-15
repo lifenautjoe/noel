@@ -1,7 +1,7 @@
 /**
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
-import { NoelEventListener, NoelEventMiddleware, NoelMiddleware } from './types';
+import { NoelEventListener, NoelEventMiddleware, NoelEventMiddlewareNextExecutor, NoelMiddleware } from './types';
 
 export interface Noel {
     enable(): void;
@@ -16,7 +16,7 @@ export interface Noel {
 
     disableReplay(): void;
 
-    setReplayBufferAmount(buffer: number): void;
+    setReplayBufferSize(buffer: number): void;
 
     clearReplayBufferForEvent(eventName: string): void;
 
@@ -56,7 +56,7 @@ export interface Noel {
 export interface NoelConfig {
     enabled?: boolean;
     replay?: boolean;
-    replayBufferAmount?: number;
+    replayBufferSize?: number;
     supportedEvents?: Array<string>;
     unsupportedEventWarning?: boolean;
 }
@@ -64,7 +64,7 @@ export interface NoelConfig {
 export interface NoelEventListenerManager {
     remove(): void;
 
-    replay(bufferAmount: number): NoelEventListenerManager;
+    replay(bufferSize: number): NoelEventListenerManager;
 }
 
 export interface MiddlewareManager {
@@ -72,7 +72,7 @@ export interface MiddlewareManager {
 }
 
 export interface NoelEventEmission {
-    then(): Promise<void>;
+    then(executor: NoelEventMiddlewareNextExecutor): Promise<Array<any> | void>;
 
     next(...eventArgs: Array<void>): void;
 
@@ -90,6 +90,12 @@ export interface NoelEventMiddlewareManager extends NoelMiddlewareManager {}
 export interface NoelMiddlewareManager extends MiddlewareManager {}
 
 export interface NoelEvent {
+    enableReplay(): void;
+
+    disableReplay(): void;
+
+    replayIsEnabled(): boolean;
+
     emit(): void;
 
     on(listener: NoelEventListener): NoelEventListenerManager;
@@ -106,5 +112,13 @@ export interface NoelEvent {
 
     clearListeners(): void;
 
-    setReplayBufferAmount(replayBufferAmount: number): void;
+    setReplayBufferSize(replayBufferSize: number): void;
+
+    getReplayBufferAmount(replayBufferAmount: number): Array<any>;
+}
+
+export interface NoelEventConfig {
+    name: string;
+    replay?: boolean;
+    replayBufferSize?: number;
 }
