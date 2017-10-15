@@ -3,18 +3,18 @@
 // ...
 
 import { Noel, NoelConfig, NoelEvent, NoelEventMiddlewareManager, NoelMiddlewareManager } from './interfaces';
-import { NoelEventMiddleware, NoelMiddleware } from './types';
+import { NoelEventMiddleware } from './types';
 import { NoelMiddlewareManagerImp } from './middleware-manager';
-import { NoelEventNotSupportedError } from './errors';
+import { NoelEventNotSupportedError, NoelReplayNotEnabled } from './errors';
 import { NoelEventImp } from './event';
 
 export class NoelImp implements Noel {
     private enabled: boolean;
     private unsupportedEventWarning: boolean;
 
-    private supportedEvents: Set<string>;
-    private events: Map<string, NoelEvent>;
-    private middlewares: Set<NoelMiddleware>;
+    private supportedEvents: Set<string> | null = null;
+    private eventsMap: Map<string, NoelEvent> | null = null;
+    private middlewares: Set<NoelEventMiddleware> | null = null;
 
     private replayEnabled: boolean;
     private replayBufferSize: number;
@@ -28,8 +28,7 @@ export class NoelImp implements Noel {
         const replayEnabled = config.replay || false;
         replayEnabled ? this.enableReplay() : this.disableReplay();
 
-        const supportedEvents = config.supportedEvents || [];
-        this.setSupportedEvents(supportedEvents);
+        if (config.supportedEvents) this.setSupportedEvents(config.supportedEvents);
 
         config.unsupportedEventWarning ? this.enableUnsupportedEventWarning() : this.disableUnsupportedEventWarning();
     }
@@ -47,12 +46,18 @@ export class NoelImp implements Noel {
     }
 
     addSupportedEvent(eventName: string) {
-        this.supportedEvents.add(eventName);
+        const supportedEvents = this.supportedEvents;
+        if (supportedEvents) {
+            supportedEvents.add(eventName);
+        }
     }
 
     removeSupportedEvent(eventName: string) {
-        this.supportedEvents.delete(eventName);
-        this.events.delete(eventName);
+        const supportedEvents = this.supportedEvents;
+        if (supportedEvents) {
+            supportedEvents.delete(eventName);
+            this.removeEvent(eventName);
+        }
     }
 
     setSupportedEvents(supportedEvents: Array<string>) {
@@ -60,7 +65,7 @@ export class NoelImp implements Noel {
     }
 
     eventIsSupported(eventName: string) {
-        return this.supportedEvents.size === 0 || this.supportedEvents.has(eventName);
+        return !this.supportedEvents || this.supportedEvents.size === 0 || this.supportedEvents.has(eventName);
     }
 
     enableUnsupportedEventWarning() {
@@ -97,9 +102,12 @@ export class NoelImp implements Noel {
         }
     }
 
-    clearReplayBufferForEvent(eventName: string) {
-        const event = this.events.get(eventName);
-        if (event) event.clearReplayBuffer();
+    clearReplayBufferForEvent(eventName: string): void {
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            const event = eventsMap.get(eventName);
+            if (event) event.clearReplayBuffer();
+        }
     }
 
     useMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): NoelEventMiddlewareManager {
@@ -113,42 +121,76 @@ export class NoelImp implements Noel {
         if (event) event.removeMiddleware(middleware);
     }
 
-    useMiddleware(middleware: NoelMiddleware): NoelMiddlewareManager {
-        this.middlewares.add(middleware);
+    useMiddleware(middleware: NoelEventMiddleware): NoelMiddlewareManager {
+        const middlewares = this.getMiddlewares();
+        middlewares.add(middleware);
         return new NoelMiddlewareManagerImp(middleware, this);
     }
 
-    removeMiddleware(middleware: NoelMiddleware): void {
-        this.middlewares.delete(middleware);
+    removeMiddleware(middleware: NoelEventMiddleware): void {
+        const middlewares = this.middlewares;
+        if (!middlewares) return;
+        middlewares.delete(middleware);
+    }
+
+    private removeEvent(eventName: string) {
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            eventsMap.delete(eventName);
+        }
     }
 
     private getEvent(eventName: string): NoelEvent {
-        let event = this.events.get(eventName);
+        if (!this.eventIsSupported(eventName)) throw new NoelEventNotSupportedError(eventName);
+        const eventsMap = this.getEventsMap();
+        let event = eventsMap.get(eventName);
         if (!event) {
             event = this.makeEvent(eventName);
-            this.events.set(eventName, event);
+            eventsMap.set(eventName, event);
         }
         return event;
     }
 
     private makeEvent(eventName: string): NoelEvent {
-        return new NoelEventImp({
+        const event = new NoelEventImp({
             name: eventName,
             replay: this.replayEnabled,
             replayBufferSize: this.replayBufferSize
         });
+
+        const noelMiddlewares = this.middlewares;
+
+        if (noelMiddlewares) {
+            noelMiddlewares.forEach(noelMiddleware => {
+                event.useMiddleware(noelMiddleware);
+            });
+        }
+
+        return event;
     }
 
-    private setEventsReplayBuffersSize(replayBuffersSize: number) {
-        if (!this.replayEnabled) return;
-        const events = this.getEvents();
-        for (const event of events) {
-            event.setReplayBufferSize(replayBuffersSize);
+    private setEventsReplayBuffersSize(replayBuffersSize: number): void {
+        if (!this.replayEnabled) throw new NoelReplayNotEnabled();
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            const events = eventsMap.values();
+            for (const event of events) {
+                event.setReplayBufferSize(replayBuffersSize);
+            }
         }
     }
 
     private getEvents(): IterableIterator<NoelEvent> {
-        return this.events.values();
+        const eventsMap = this.getEventsMap();
+        return eventsMap.values();
+    }
+
+    private getEventsMap(): Map<string, NoelEvent> {
+        return this.eventsMap || (this.eventsMap = new Map());
+    }
+
+    private getMiddlewares(): Set<NoelEventMiddleware> {
+        return this.middlewares || (this.middlewares = new Set());
     }
 }
 
