@@ -40,7 +40,7 @@ export interface Noel {
 
     removeListener(eventName: string, listener: NoelEventListener): void;
 
-    getEventManager(eventName: string): NoelEventManager;
+    getEvent(eventName: string): NoelEvent;
 
     useMiddleware(middleware: NoelMiddleware): NoelMiddlewareManager;
 
@@ -49,6 +49,8 @@ export interface Noel {
     useMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
 
     removeMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): void;
+
+    namespace(namespaceName: string): Noel;
 }
 
 export interface NoelConfig {
@@ -57,26 +59,6 @@ export interface NoelConfig {
     replayBufferAmount?: number;
     supportedEvents?: Array<string>;
     unsupportedEventWarning?: boolean;
-}
-
-export interface NoelEventData {
-    replayBuffer: Array<any> | null;
-    listeners: Array<Function>;
-    middlewares: Array<NoelEventMiddleware>;
-}
-
-export interface NoelEventManager {
-    on(eventName: string, listener: NoelEventListener): NoelEventListenerManager;
-
-    emit(...args: Array<any>): void;
-
-    getReplayBuffer(eventName: string): Array<any>;
-
-    clearReplayBuffer(eventName: string): void;
-
-    useMiddleware(middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
-
-    removeMiddleware(middleware: NoelEventMiddleware): void;
 }
 
 export interface NoelEventListenerManager {
@@ -92,3 +74,17 @@ export interface MiddlewareManager {
 export interface NoelEventMiddlewareManager extends NoelMiddlewareManager {}
 
 export interface NoelMiddlewareManager extends MiddlewareManager {}
+
+export interface NoelEvent {
+    emit(): void;
+
+    on(listener: NoelEventListener): void;
+
+    removeListener(listener: NoelEventListener): void;
+
+    useMiddleware(middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
+
+    removeMiddleware(middleware: NoelEventMiddleware): void;
+
+    clearReplayBuffer(): void;
+}
