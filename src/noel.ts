@@ -3,7 +3,7 @@
 // ...
 
 import { Noel, NoelConfig, NoelEvent, NoelEventMiddlewareManager, NoelMiddlewareManager } from './interfaces';
-import { NoelEventMiddleware } from './types';
+import { NoelEventListener, NoelEventMiddleware } from './types';
 import { NoelMiddlewareManagerImp } from './middleware-manager';
 import { NoelEventNotSupportedError, NoelReplayNotEnabled } from './errors';
 import { NoelEventImp } from './event';
@@ -31,6 +31,18 @@ export class NoelImp implements Noel {
         if (config.supportedEvents) this.setSupportedEvents(config.supportedEvents);
 
         config.unsupportedEventWarning ? this.enableUnsupportedEventWarning() : this.disableUnsupportedEventWarning();
+    }
+
+    removeListener(eventName: string, listener: NoelEventListener) {
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            const event = eventsMap.get(eventName);
+            if (event) {
+                event.removeListener(listener);
+                const eventListenersCount = event.countListeners();
+                if (eventListenersCount === 0) this.removeEvent(eventName);
+            }
+        }
     }
 
     enable() {
