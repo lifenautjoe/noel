@@ -2,7 +2,7 @@
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
 import { NoelEventEmission } from './interfaces';
-import { NoelEventMiddleware } from './types';
+import { NoelEventMiddleware, NoelEventMiddlewareNextExecutor } from './types';
 import { NoelEventEmissionWasAborted } from './errors';
 
 export class NoelEventEmissionImp implements NoelEventEmission {
@@ -10,15 +10,22 @@ export class NoelEventEmissionImp implements NoelEventEmission {
     private promiseResolve: Function;
     private promiseReject: Function;
     private wasAborted: boolean;
+    private middlewaresIterator: IterableIterator<NoelEventMiddleware>;
 
-    constructor(private eventName: string, private eventArgs: Array<any>, private remainingMiddlewares: Array<NoelEventMiddleware>) {}
+    constructor(private eventName: string, private eventArgs: Array<any>, private middlewares: Set<NoelEventMiddleware>) {
+        this.middlewaresIterator = middlewares.values();
+        this.emissionPromise = new Promise((resolve, reject) => {
+            this.promiseResolve = resolve;
+            this.promiseReject = reject;
+        });
+    }
 
     digestMiddlewares(): void {
-        const nextMiddleware = this.remainingMiddlewares.pop();
-        if (nextMiddleware) {
-            nextMiddleware(this);
-        } else if (this.promiseResolve) {
-            this.promiseResolve();
+        const next = this.middlewaresIterator.next();
+        if (next.done) {
+            if (this.promiseResolve) this.promiseResolve(this.eventArgs);
+        } else {
+            next.value(this);
         }
     }
 
@@ -41,11 +48,7 @@ export class NoelEventEmissionImp implements NoelEventEmission {
         if (this.promiseReject) this.promiseReject(reason);
     }
 
-    then(): Promise<void> {
-        if (this.emissionPromise) return this.emissionPromise;
-        return (this.emissionPromise = new Promise((resolve, reject) => {
-            this.promiseResolve = resolve;
-            this.promiseReject = reject;
-        }));
+    then(executor: NoelEventMiddlewareNextExecutor): Promise<Array<any> | void> {
+        return this.emissionPromise.then(executor);
     }
 }
