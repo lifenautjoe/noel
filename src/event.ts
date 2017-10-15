@@ -92,6 +92,12 @@ export class NoelEventImp implements NoelEvent {
         this.replayBuffer = replayBuffer.slice(0, replayBufferSize);
     }
 
+    getReplayBufferAmount(replayBufferAmount: number): Array<any> {
+        if (!this.replayEnabled) throw new NoelEventReplayNotEnabled(this.name);
+        const replayBuffer = this.getReplayBuffer();
+        return typeof replayBufferAmount === 'undefined' || replayBufferAmount === replayBuffer.length ? replayBuffer : replayBuffer.slice(0, replayBufferAmount);
+    }
+
     private emitWithMiddlewares(listeners: Set<NoelEventListener>, middlewares: Set<NoelEventMiddleware>, eventArgs: Array<any>): void {
         const emission = new NoelEventEmissionImp(this.name, eventArgs, middlewares);
         emission.then((finalEventArgs: Array<any>) => {
