@@ -1,18 +1,46 @@
 /**
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
-import { NoelEvent, NoelEventListenerManager, NoelEventMiddlewareManager } from './interfaces';
+import { NoelEvent, NoelEventConfig, NoelEventListenerManager, NoelEventMiddlewareManager } from './interfaces';
 import { NoelEventListener, NoelEventMiddleware } from './types';
 import { NoelEventMiddlewareManagerImp } from './event-middleware-manager';
 import { NoelEventListenerManagerImp } from './event-listener-manager';
 import { NoelEventEmissionImp } from './event-emission';
+import { NoelEventConfigError, NoelEventReplayNotEnabled } from './errors';
 
 export class NoelEventImp implements NoelEvent {
+    private name: string;
+    private replayEnabled: boolean;
+    private replayBufferSize: number;
     private replayBuffer: Array<any> | null = null;
     private listeners: Set<NoelEventListener> | null = null;
     private middlewares: Set<NoelEventMiddleware> | null = null;
 
-    constructor(private name: string) {}
+    constructor(config: NoelEventConfig) {
+        config = config || {};
+
+        if (!config.name) throw new NoelEventConfigError('config.name:string is required');
+
+        this.replayBufferSize = config.replayBufferSize || 1;
+
+        const replayEnabled = config.replay || false;
+        replayEnabled ? this.enableReplay() : this.disableReplay();
+    }
+
+    replayIsEnabled(): boolean {
+        return this.replayEnabled;
+    }
+
+    enableReplay(): void {
+        if (this.replayEnabled) return;
+        this.replayEnabled = true;
+        this.replayBuffer = [];
+    }
+
+    disableReplay(): void {
+        this.replayEnabled = false;
+        this.replayBuffer = null;
+    }
 
     emit(...eventArgs: Array<any>): void {
         const listeners = this.listeners;
@@ -57,10 +85,11 @@ export class NoelEventImp implements NoelEvent {
         this.listeners = null;
     }
 
-    setReplayBufferAmount(replayBufferAmount: number): void {
+    setReplayBufferSize(replayBufferSize: number): void {
+        if (!this.replayEnabled) throw new NoelEventReplayNotEnabled(this.name);
         const replayBuffer = this.replayBuffer;
         if (!replayBuffer) return;
-        this.replayBuffer = replayBuffer.slice(0, replayBufferAmount);
+        this.replayBuffer = replayBuffer.slice(0, replayBufferSize);
     }
 
     private emitWithMiddlewares(listeners: Set<NoelEventListener>, middlewares: Set<NoelEventMiddleware>, eventArgs: Array<any>): void {
