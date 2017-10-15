@@ -122,6 +122,13 @@ export class NoelImp implements Noel {
     }
 
     useMiddleware(middleware: NoelEventMiddleware): NoelMiddlewareManager {
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            const events = eventsMap.values();
+            for (const event of events) {
+                event.useMiddleware(middleware);
+            }
+        }
         const middlewares = this.getMiddlewares();
         middlewares.add(middleware);
         return new NoelMiddlewareManagerImp(middleware, this);
@@ -131,6 +138,14 @@ export class NoelImp implements Noel {
         const middlewares = this.middlewares;
         if (!middlewares) return;
         middlewares.delete(middleware);
+
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            const events = eventsMap.values();
+            for (const event of events) {
+                event.removeMiddleware(middleware);
+            }
+        }
     }
 
     private removeEvent(eventName: string) {
