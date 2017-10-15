@@ -71,6 +71,16 @@ export interface MiddlewareManager {
     remove(): void;
 }
 
+export interface NoelEventEmission {
+    then(): Promise<void>;
+
+    next(...eventArgs: Array<void>): void;
+
+    args(): Array<any>;
+
+    abort(reason: Error): void;
+}
+
 export interface NoelEventMiddlewareManager extends NoelMiddlewareManager {}
 
 export interface NoelMiddlewareManager extends MiddlewareManager {}
@@ -78,7 +88,7 @@ export interface NoelMiddlewareManager extends MiddlewareManager {}
 export interface NoelEvent {
     emit(): void;
 
-    on(listener: NoelEventListener): void;
+    on(listener: NoelEventListener): NoelEventListenerManager;
 
     removeListener(listener: NoelEventListener): void;
 
@@ -86,5 +96,11 @@ export interface NoelEvent {
 
     removeMiddleware(middleware: NoelEventMiddleware): void;
 
+    clearMiddlewares(): void;
+
     clearReplayBuffer(): void;
+
+    clearListeners(): void;
+
+    setReplayBufferAmount(replayBufferAmount: number): void;
 }
