@@ -62,6 +62,10 @@ export class NoelEventImp implements NoelEvent {
         listeners.delete(listener);
     }
 
+    countListeners(): number {
+        return this.listeners ? this.listeners.size : 0;
+    }
+
     useMiddleware(middleware: NoelEventMiddleware): NoelEventMiddlewareManager {
         const middlewares = this.getMiddlewares();
         middlewares.add(middleware);
