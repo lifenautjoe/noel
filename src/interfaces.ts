@@ -30,7 +30,7 @@ export interface Noel {
 
     eventIsSupported(eventName: string): boolean;
 
-    setLogger(): NoelLogger;
+    setLogger(logger: NoelLogger): void;
 
     enableUnsupportedEventWarning(): void;
 

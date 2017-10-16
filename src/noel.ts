@@ -2,19 +2,25 @@
 // import "core-js/fn/array.find"
 // ...
 
-import { Noel, NoelConfig, NoelEvent, NoelEventMiddlewareManager, NoelMiddlewareManager } from './interfaces';
+import { Noel, NoelConfig, NoelEvent, NoelEventListenerManager, NoelEventMiddlewareManager, NoelLogger, NoelMiddlewareManager } from './interfaces';
 import { NoelEventListener, NoelEventMiddleware } from './types';
 import { NoelMiddlewareManagerImp } from './middleware-manager';
 import { NoelEventNotSupportedError, NoelReplayNotEnabled } from './errors';
 import { NoelEventImp } from './event';
+import { NoelLoggerImp } from './logger';
+
+const logger = new NoelLoggerImp();
 
 export class NoelImp implements Noel {
     private enabled: boolean;
     private unsupportedEventWarning: boolean;
+    private noEventListenersWarning: boolean;
 
     private supportedEvents: Set<string> | null = null;
     private eventsMap: Map<string, NoelEvent> | null = null;
     private middlewares: Set<NoelEventMiddleware> | null = null;
+
+    private logger: NoelLogger;
 
     private replayEnabled: boolean;
     private replayBufferSize: number;
@@ -31,6 +37,18 @@ export class NoelImp implements Noel {
         if (config.supportedEvents) this.setSupportedEvents(config.supportedEvents);
 
         config.unsupportedEventWarning ? this.enableUnsupportedEventWarning() : this.disableUnsupportedEventWarning();
+    }
+
+    emit(eventName: string, ...eventArgs: Array<any>) {
+        if (this.enabled) {
+            const event = this.getEvent(eventName);
+            event.emit(...eventArgs);
+        }
+    }
+
+    on(eventName: string, listener: NoelEventListener): NoelEventListenerManager {
+        const event = this.getEvent(eventName);
+        return event.on(listener);
     }
 
     removeListener(eventName: string, listener: NoelEventListener) {
@@ -78,6 +96,30 @@ export class NoelImp implements Noel {
 
     eventIsSupported(eventName: string) {
         return !this.supportedEvents || this.supportedEvents.size === 0 || this.supportedEvents.has(eventName);
+    }
+
+    setLogger(logger: NoelLogger): void {
+        this.logger = logger;
+    }
+
+    enableNoEventListenersWarning(): void {
+        if (this.noEventListenersWarning) return;
+        this.noEventListenersWarning = true;
+        if (this.eventsMap) {
+            for (const event of this.eventsMap.values()) {
+                event.enableNoListenersWarning();
+            }
+        }
+    }
+
+    disableNoEventListenersWarning(): void {
+        if (!this.noEventListenersWarning) return;
+        this.noEventListenersWarning = false;
+        if (this.eventsMap) {
+            for (const event of this.eventsMap.values()) {
+                event.disableNoListenersWarning();
+            }
+        }
     }
 
     enableUnsupportedEventWarning() {
@@ -227,4 +269,4 @@ export * from './interfaces';
 
 export * from './types';
 
-export default NoelImp;
+export default new NoelImp({});
