@@ -30,13 +30,19 @@ export interface Noel {
 
     eventIsSupported(eventName: string): boolean;
 
+    setLogger(): NoelLogger;
+
     enableUnsupportedEventWarning(): void;
 
     disableUnsupportedEventWarning(): void;
 
+    enableNoEventListenersWarning(): void;
+
+    disableNoEventListenersWarning(): void;
+
     on(eventName: string, listener: NoelEventListener): NoelEventListenerManager;
 
-    emit(...args: Array<any>): void;
+    emit(eventName: string, ...eventArgs: Array<any>): void;
 
     removeListener(eventName: string, listener: NoelEventListener): void;
 
@@ -90,6 +96,12 @@ export interface NoelEventMiddlewareManager extends NoelMiddlewareManager {}
 export interface NoelMiddlewareManager extends MiddlewareManager {}
 
 export interface NoelEvent {
+    setLogger(logger: NoelLogger): void;
+
+    enableNoListenersWarning(): void;
+
+    disableNoListenersWarning(): void;
+
     enableReplay(): void;
 
     disableReplay(): void;
@@ -121,6 +133,12 @@ export interface NoelEvent {
 
 export interface NoelEventConfig {
     name: string;
+    logger?: NoelLogger;
     replay?: boolean;
     replayBufferSize?: number;
+    noListenersWarning?: boolean;
+}
+
+export interface NoelLogger {
+    logWarn(warn: string): void;
 }
