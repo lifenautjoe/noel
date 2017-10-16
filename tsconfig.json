@@ -1,9 +1,15 @@
 {
     "compilerOptions": {
+        "downlevelIteration": true,
         "moduleResolution": "node",
         "target": "es5",
-        "module":"es2015",
-        "lib": ["es2015", "es2016", "es2017", "dom"],
+        "module": "es2015",
+        "lib": [
+            "es2015",
+            "es2016",
+            "es2017",
+            "dom"
+        ],
         "strict": true,
         "sourceMap": true,
         "declaration": true,
@@ -13,7 +19,7 @@
         "declarationDir": "dist/types",
         "outDir": "compiled",
         "typeRoots": [
-          "node_modules/@types"
+            "node_modules/@types"
         ]
     },
     "include": [
