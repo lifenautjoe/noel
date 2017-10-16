@@ -205,14 +205,7 @@ export class NoelImp implements Noel {
         }
     }
 
-    private removeEvent(eventName: string) {
-        const eventsMap = this.eventsMap;
-        if (eventsMap) {
-            eventsMap.delete(eventName);
-        }
-    }
-
-    private getEvent(eventName: string): NoelEvent {
+    getEvent(eventName: string): NoelEvent {
         if (!this.eventIsSupported(eventName)) throw new NoelEventNotSupportedError(eventName);
         const eventsMap = this.getEventsMap();
         let event = eventsMap.get(eventName);
@@ -221,6 +214,13 @@ export class NoelImp implements Noel {
             eventsMap.set(eventName, event);
         }
         return event;
+    }
+
+    private removeEvent(eventName: string) {
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            eventsMap.delete(eventName);
+        }
     }
 
     private makeEvent(eventName: string): NoelEvent {
