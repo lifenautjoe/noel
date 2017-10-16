@@ -9,7 +9,7 @@ import { NoelEventNotSupportedError, NoelReplayNotEnabled } from './errors';
 import { NoelEventImp } from './event';
 import { NoelLoggerImp } from './logger';
 
-const logger = new NoelLoggerImp();
+const defaultLogger = new NoelLoggerImp();
 
 export class NoelImp implements Noel {
     private enabled: boolean;
@@ -35,6 +35,9 @@ export class NoelImp implements Noel {
         replayEnabled ? this.enableReplay() : this.disableReplay();
 
         if (config.supportedEvents) this.setSupportedEvents(config.supportedEvents);
+
+        const logger = config.logger || defaultLogger;
+        this.setLogger(logger);
 
         config.unsupportedEventWarning ? this.enableUnsupportedEventWarning() : this.disableUnsupportedEventWarning();
     }

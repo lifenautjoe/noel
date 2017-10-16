@@ -65,6 +65,7 @@ export interface NoelConfig {
     replayBufferSize?: number;
     supportedEvents?: Array<string>;
     unsupportedEventWarning?: boolean;
+    logger?: NoelLogger;
 }
 
 export interface NoelEventListenerManager {
