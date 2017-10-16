@@ -140,5 +140,5 @@ export interface NoelEventConfig {
 }
 
 export interface NoelLogger {
-    logWarn(warn: string): void;
+    warn(warn: string): void;
 }
