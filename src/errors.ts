@@ -18,6 +18,13 @@ export class NoelConfigError extends NoelError {
     }
 }
 
+export class NoelReplayNotEnabled extends NoelError {
+    constructor() {
+        super('Replay for noel is not enabled');
+        this.name = 'NoelReplayNotEnabled';
+    }
+}
+
 export class NoelEventError extends NoelError {
     constructor(message: string) {
         super(message);
