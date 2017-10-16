@@ -25,6 +25,10 @@ export class NoelImp implements Noel {
     private replayEnabled: boolean;
     private replayBufferSize: number;
 
+    private namespaceDelimiterSymbol: string;
+    private namespaces: Map<string, Noel>;
+    private namespace: string;
+
     constructor(config?: NoelConfig) {
         config = config || {};
 
@@ -39,14 +43,37 @@ export class NoelImp implements Noel {
         const logger = config.logger || defaultLogger;
         this.setLogger(logger);
 
+        const namespaceDelimiterSymbol = config.namespaceDelimiterSymbol || '.';
+        this.setNamespaceDelimiterSymbol(namespaceDelimiterSymbol);
+
+        this.namespace = config.namespace || 'root';
+
         config.unsupportedEventWarning ? this.enableUnsupportedEventWarning() : this.disableUnsupportedEventWarning();
     }
 
     emit(eventName: string, ...eventArgs: Array<any>) {
         if (this.enabled) {
-            const event = this.getEvent(eventName);
-            event.emit(...eventArgs);
+            if (!this.eventIsSupported(eventName)) throw new NoelEventNotSupportedError(eventName);
+            const eventNamespaces = eventName.split(this.namespaceDelimiterSymbol);
+            eventNamespaces.length > 2 ? this.emitWithNamespaces(eventNamespaces, eventArgs) : this.emitNormally(eventName, eventArgs);
         }
+    }
+
+    emitWithNamespaces(namespaces: Array<string>, eventArgs: Array<any>) {
+        const nextNamespace = namespaces.shift();
+        if (nextNamespace) {
+            if (namespaces.length === 0) {
+                this.emitNormally(nextNamespace, eventArgs);
+            } else {
+                const namespace = this.getNamespace(nextNamespace);
+                namespace.emitWithNamespaces(namespaces, eventArgs);
+            }
+        }
+    }
+
+    emitNormally(eventName: string, eventArgs: Array<any>) {
+        const event = this.getEvent(eventName);
+        event.emit(...eventArgs);
     }
 
     on(eventName: string, listener: NoelEventListener): NoelEventListenerManager {
@@ -205,6 +232,10 @@ export class NoelImp implements Noel {
         }
     }
 
+    setNamespaceDelimiterSymbol(namespaceDelimiterSymbol: string): void {
+        this.namespaceDelimiterSymbol = namespaceDelimiterSymbol;
+    }
+
     getEvent(eventName: string): NoelEvent {
         if (!this.eventIsSupported(eventName)) throw new NoelEventNotSupportedError(eventName);
         const eventsMap = this.getEventsMap();
@@ -214,6 +245,26 @@ export class NoelImp implements Noel {
             eventsMap.set(eventName, event);
         }
         return event;
+    }
+
+    getNamespace(namespaceName: string): Noel {
+        const namespaces = this.getNamespaces();
+        let namespace = namespaces.get(namespaceName);
+        if (!namespace) {
+            namespace = this.makeNamespace(namespaceName);
+            namespaces.set(namespaceName, namespace);
+        }
+        return namespace;
+    }
+
+    private makeNamespace(namespaceName: string): Noel {
+        return new NoelImp({
+            namespace: namespaceName
+        });
+    }
+
+    private getNamespaces(): Map<string, Noel> {
+        return this.namespaces || (this.namespaces = new Map());
     }
 
     private removeEvent(eventName: string) {
