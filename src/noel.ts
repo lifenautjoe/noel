@@ -5,7 +5,7 @@
 import { Noel, NoelConfig, NoelEvent, NoelEventListenerManager, NoelEventMiddlewareManager, NoelLogger, NoelMiddlewareManager } from './interfaces';
 import { NoelEventListener, NoelEventMiddleware } from './types';
 import { NoelMiddlewareManagerImp } from './middleware-manager';
-import { NoelEventNotSupportedError, NoelReplayNotEnabled } from './errors';
+import { NoelError, NoelEventNotSupportedError, NoelReplayNotEnabled } from './errors';
 import { NoelEventImp } from './event';
 import { NoelLoggerImp } from './logger';
 
@@ -54,24 +54,12 @@ export class NoelImp implements Noel {
     emit(eventName: string, ...eventArgs: Array<any>) {
         if (this.enabled) {
             if (!this.eventIsSupported(eventName)) throw new NoelEventNotSupportedError(eventName);
-            const eventNamespaces = eventName.split(this.namespaceDelimiterSymbol);
-            eventNamespaces.length > 2 ? this.emitWithNamespaces(eventNamespaces, eventArgs) : this.emitNormally(eventName, eventArgs);
+            const namespace = this.getLastNamespaceFromString(eventName);
+            namespace.emitWithoutNamespaceCheck(eventName, eventArgs);
         }
     }
 
-    emitWithNamespaces(namespaces: Array<string>, eventArgs: Array<any>) {
-        const nextNamespace = namespaces.shift();
-        if (nextNamespace) {
-            if (namespaces.length === 0) {
-                this.emitNormally(nextNamespace, eventArgs);
-            } else {
-                const namespace = this.getNamespace(nextNamespace);
-                namespace.emitWithNamespaces(namespaces, eventArgs);
-            }
-        }
-    }
-
-    emitNormally(eventName: string, eventArgs: Array<any>) {
+    emitWithoutNamespaceCheck(eventName: string, eventArgs: Array<any>) {
         const event = this.getEvent(eventName);
         event.emit(...eventArgs);
     }
@@ -257,9 +245,25 @@ export class NoelImp implements Noel {
         return namespace;
     }
 
+    getLastNamespaceFromString(namespaces: string): Noel {
+        const namespacesArray = namespaces.split(this.namespaceDelimiterSymbol);
+        return namespacesArray.length < 2 ? this : this.getLastNamespaceFromArray(namespacesArray);
+    }
+
+    getLastNamespaceFromArray(namespaces: Array<string>): Noel {
+        const nextNamespace = namespaces.shift();
+        if (nextNamespace) {
+            if (namespaces.length === 0) return this;
+            const namespace = this.getNamespace(nextNamespace);
+            return namespace.getLastNamespaceFromArray(namespaces);
+        }
+        throw new NoelError('Unhandled Error: No nextNamespace in namespaces list');
+    }
+
     private makeNamespace(namespaceName: string): Noel {
         return new NoelImp({
-            namespace: namespaceName
+            namespace: namespaceName,
+            namespaceDelimiterSymbol: this.namespaceDelimiterSymbol
         });
     }
 
