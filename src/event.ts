@@ -156,6 +156,6 @@ export class NoelEventImp implements NoelEvent {
     }
 
     private logWarn(warn: string) {
-        if (this.logger) this.logger.logWarn(warn);
+        if (this.logger) this.logger.warn(warn);
     }
 }
