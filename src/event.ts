@@ -1,7 +1,7 @@
 /**
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
-import { NoelEvent, NoelEventConfig, NoelEventListenerManager, NoelEventMiddlewareManager } from './interfaces';
+import { NoelEvent, NoelEventConfig, NoelEventListenerManager, NoelEventMiddlewareManager, NoelLogger } from './interfaces';
 import { NoelEventListener, NoelEventMiddleware } from './types';
 import { NoelEventMiddlewareManagerImp } from './event-middleware-manager';
 import { NoelEventListenerManagerImp } from './event-listener-manager';
@@ -12,16 +12,24 @@ export class NoelEventImp implements NoelEvent {
     private name: string;
     private replayEnabled: boolean;
     private replayBufferSize: number;
+
     private replayBuffer: Array<any> | null = null;
     private listeners: Set<NoelEventListener> | null = null;
     private middlewares: Set<NoelEventMiddleware> | null = null;
+
+    private logger: NoelLogger | undefined;
+    private noListenersWarning: boolean;
 
     constructor(config: NoelEventConfig) {
         config = config || {};
 
         if (!config.name) throw new NoelEventConfigError('config.name:string is required');
 
+        if (config.logger) this.setLogger(config.logger);
+
         this.replayBufferSize = config.replayBufferSize || 1;
+
+        config.noListenersWarning ? this.enableNoListenersWarning() : this.disableNoListenersWarning();
 
         const replayEnabled = config.replay || false;
         replayEnabled ? this.enableReplay() : this.disableReplay();
@@ -44,10 +52,12 @@ export class NoelEventImp implements NoelEvent {
 
     emit(...eventArgs: Array<any>): void {
         const listeners = this.listeners;
-        if (!listeners) return;
-
-        const middlewares = this.middlewares;
-        middlewares ? this.emitWithMiddlewares(listeners, middlewares, eventArgs) : this.emitNormally(listeners, eventArgs);
+        if (listeners) {
+            const middlewares = this.middlewares;
+            middlewares ? this.emitWithMiddlewares(listeners, middlewares, eventArgs) : this.emitNormally(listeners, eventArgs);
+        } else if (!this.replayEnabled && this.noListenersWarning) {
+            this.logWarn(`Event "${this.name}" was emitted but has no listeners.`);
+        }
     }
 
     on(listener: NoelEventListener): NoelEventListenerManager {
@@ -102,6 +112,18 @@ export class NoelEventImp implements NoelEvent {
         return typeof replayBufferAmount === 'undefined' || replayBufferAmount === replayBuffer.length ? replayBuffer : replayBuffer.slice(0, replayBufferAmount);
     }
 
+    setLogger(logger: NoelLogger) {
+        this.logger = logger;
+    }
+
+    enableNoListenersWarning(): void {
+        this.noListenersWarning = true;
+    }
+
+    disableNoListenersWarning(): void {
+        this.noListenersWarning = false;
+    }
+
     private emitWithMiddlewares(listeners: Set<NoelEventListener>, middlewares: Set<NoelEventMiddleware>, eventArgs: Array<any>): void {
         const emission = new NoelEventEmissionImp(this.name, eventArgs, middlewares);
         emission.then((finalEventArgs: Array<any>) => {
@@ -131,5 +153,9 @@ export class NoelEventImp implements NoelEvent {
 
     private getMiddlewares(): Set<NoelEventMiddleware> {
         return this.middlewares || (this.middlewares = new Set<NoelEventMiddleware>());
+    }
+
+    private logWarn(warn: string) {
+        if (this.logger) this.logger.logWarn(warn);
     }
 }
