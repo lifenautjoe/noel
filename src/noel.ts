@@ -54,7 +54,7 @@ export class NoelImp implements Noel {
     emit(eventName: string, ...eventArgs: Array<any>) {
         if (this.enabled) {
             if (!this.eventIsSupported(eventName)) throw new NoelEventNotSupportedError(eventName);
-            const namespace = this.getLastNamespaceFromString(eventName);
+            const namespace = this.getOrCreateLastNamespaceFromString(eventName);
             namespace.emitWithoutNamespaceCheck(eventName, eventArgs);
         }
     }
@@ -245,17 +245,34 @@ export class NoelImp implements Noel {
         return namespace;
     }
 
-    getLastNamespaceFromString(namespaces: string): Noel {
+    getLastNamespaceFromString(namespaces: string): Noel | undefined {
         const namespacesArray = namespaces.split(this.namespaceDelimiterSymbol);
         return namespacesArray.length < 2 ? this : this.getLastNamespaceFromArray(namespacesArray);
     }
 
-    getLastNamespaceFromArray(namespaces: Array<string>): Noel {
+    getLastNamespaceFromArray(namespacesArr: Array<string>): Noel | undefined {
+        const nextNamespace = namespacesArr.shift();
+        if (nextNamespace) {
+            if (namespacesArr.length === 0) return this;
+            const namespaces = this.namespaces;
+            if (namespaces) {
+                const namespace = namespaces.get(nextNamespace);
+                if (namespace) return namespace.getLastNamespaceFromArray(namespacesArr);
+            }
+        }
+    }
+
+    getOrCreateLastNamespaceFromString(namespaces: string): Noel {
+        const namespacesArray = namespaces.split(this.namespaceDelimiterSymbol);
+        return namespacesArray.length < 2 ? this : this.getOrCreateLastNamespaceFromArray(namespacesArray);
+    }
+
+    getOrCreateLastNamespaceFromArray(namespaces: Array<string>): Noel {
         const nextNamespace = namespaces.shift();
         if (nextNamespace) {
             if (namespaces.length === 0) return this;
             const namespace = this.getNamespace(nextNamespace);
-            return namespace.getLastNamespaceFromArray(namespaces);
+            return namespace.getOrCreateLastNamespaceFromArray(namespaces);
         }
         throw new NoelError('Unhandled Error: No nextNamespace in namespaces list');
     }

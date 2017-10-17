@@ -62,9 +62,13 @@ export interface Noel {
 
     setNamespaceDelimiterSymbol(namespaceDelimiterSymbol: string): void;
 
-    getLastNamespaceFromString(namespaces: string): Noel;
+    getLastNamespaceFromString(namespaces: string): Noel | undefined;
 
-    getLastNamespaceFromArray(namespaces: Array<string>): Noel;
+    getLastNamespaceFromArray(namespaces: Array<string>): Noel | undefined;
+
+    getOrCreateLastNamespaceFromString(namespaces: string): Noel;
+
+    getOrCreateLastNamespaceFromArray(namespaces: Array<string>): Noel;
 }
 
 export interface NoelConfig {
