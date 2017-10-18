@@ -44,11 +44,11 @@ export interface Noel {
 
     emit(eventName: string, ...eventArgs: Array<any>): void;
 
-    emitWithoutNamespaceCheck(eventName: string, eventArgs: Array<any>): void;
-
     removeListener(eventName: string, listener: NoelEventListener): void;
 
     getEvent(eventName: string): NoelEvent;
+
+    hasEvent(eventName: string): boolean;
 
     useMiddleware(middleware: NoelEventMiddleware): NoelMiddlewareManager;
 
@@ -58,17 +58,9 @@ export interface Noel {
 
     removeMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): void;
 
-    getNamespace(namespaceName: string): Noel;
+    getNamespace(namespaceName: string): Noel | Array<Noel>;
 
     setNamespaceDelimiterSymbol(namespaceDelimiterSymbol: string): void;
-
-    getLastNamespaceFromString(namespaces: string): Noel | undefined;
-
-    getLastNamespaceFromArray(namespaces: Array<string>): Noel | undefined;
-
-    getOrCreateLastNamespaceFromString(namespaces: string): Noel;
-
-    getOrCreateLastNamespaceFromArray(namespaces: Array<string>): Noel;
 }
 
 export interface NoelConfig {
