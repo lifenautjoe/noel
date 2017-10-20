@@ -4,12 +4,6 @@
 import { NoelEventListener, NoelEventMiddleware, NoelEventMiddlewareNextExecutor } from './types';
 
 export interface Noel {
-    enable(): void;
-
-    disable(): void;
-
-    isEnabled(): boolean;
-
     replayIsEnabled(): boolean;
 
     enableReplay(): void;
@@ -22,19 +16,7 @@ export interface Noel {
 
     clearEventsReplayBuffers(): void;
 
-    setSupportedEvents(supportedEvents: Array<string>): void;
-
-    addSupportedEvent(eventName: string): void;
-
-    removeSupportedEvent(eventName: string): void;
-
-    eventIsSupported(eventName: string): boolean;
-
     setLogger(logger: NoelLogger): void;
-
-    enableUnsupportedEventWarning(): void;
-
-    disableUnsupportedEventWarning(): void;
 
     enableNoEventListenersWarning(): void;
 
@@ -49,29 +31,13 @@ export interface Noel {
     getEvent(eventName: string): NoelEvent;
 
     hasEvent(eventName: string): boolean;
-
-    useMiddleware(middleware: NoelEventMiddleware): NoelMiddlewareManager;
-
-    removeMiddleware(middleware: NoelEventMiddleware): void;
-
-    useMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
-
-    removeMiddlewareForEvent(eventName: string, middleware: NoelEventMiddleware): void;
-
-    getNamespace(namespaceName: string): Noel | Array<Noel>;
-
-    setNamespaceDelimiterSymbol(namespaceDelimiterSymbol: string): void;
 }
 
 export interface NoelConfig {
     enabled?: boolean;
     replay?: boolean;
     replayBufferSize?: number;
-    supportedEvents?: Array<string>;
-    unsupportedEventWarning?: boolean;
     logger?: NoelLogger;
-    namespaceDelimiterSymbol?: string;
-    namespace?: string;
 }
 
 export interface NoelEventListenerManager {
@@ -82,20 +48,6 @@ export interface NoelEventListenerManager {
 
 export interface MiddlewareManager {
     remove(): void;
-}
-
-export interface NoelEventEmission {
-    then(executor: NoelEventMiddlewareNextExecutor): Promise<Array<any> | void>;
-
-    next(...eventArgs: Array<void>): void;
-
-    getEventArgs(): Array<any>;
-
-    getEventName(): string;
-
-    abort(reason: Error): void;
-
-    digestMiddlewares(): void;
 }
 
 export interface NoelEventMiddlewareManager extends NoelMiddlewareManager {}
@@ -122,12 +74,6 @@ export interface NoelEvent {
     removeListener(listener: NoelEventListener): void;
 
     countListeners(): number;
-
-    useMiddleware(middleware: NoelEventMiddleware): NoelEventMiddlewareManager;
-
-    removeMiddleware(middleware: NoelEventMiddleware): void;
-
-    clearMiddlewares(): void;
 
     clearReplayBuffer(): void;
 
