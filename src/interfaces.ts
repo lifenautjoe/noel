@@ -1,7 +1,7 @@
 /**
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
-import { NoelEventListener, NoelEventMiddleware, NoelEventMiddlewareNextExecutor } from './types';
+import { NoelEventListener } from './types';
 
 export interface Noel {
     replayIsEnabled(): boolean;
@@ -29,12 +29,9 @@ export interface Noel {
     removeListener(eventName: string, listener: NoelEventListener): void;
 
     getEvent(eventName: string): NoelEvent;
-
-    hasEvent(eventName: string): boolean;
 }
 
 export interface NoelConfig {
-    enabled?: boolean;
     replay?: boolean;
     replayBufferSize?: number;
     logger?: NoelLogger;
@@ -45,14 +42,6 @@ export interface NoelEventListenerManager {
 
     replay(bufferSize: number): NoelEventListenerManager;
 }
-
-export interface MiddlewareManager {
-    remove(): void;
-}
-
-export interface NoelEventMiddlewareManager extends NoelMiddlewareManager {}
-
-export interface NoelMiddlewareManager extends MiddlewareManager {}
 
 export interface NoelEvent {
     setLogger(logger: NoelLogger): void;
@@ -65,15 +54,11 @@ export interface NoelEvent {
 
     disableReplay(): void;
 
-    replayIsEnabled(): boolean;
-
     emit(): void;
 
     on(listener: NoelEventListener): NoelEventListenerManager;
 
     removeListener(listener: NoelEventListener): void;
-
-    countListeners(): number;
 
     clearReplayBuffer(): void;
 
