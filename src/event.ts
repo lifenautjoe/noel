@@ -4,9 +4,11 @@
 import { NoelEvent, NoelEventConfig, NoelEventListenerManager, NoelLogger } from './interfaces';
 import { NoelEventListener } from './types';
 import { NoelEventListenerManagerImp } from './event-listener-manager';
-import { NoelEventConfigError, NoelEventReplayNotEnabled } from './errors';
+import { NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled } from './errors';
+import NoelImp from './noel';
 
 export class NoelEventImp implements NoelEvent {
+    private noel: NoelImp;
     private name: string;
     private replayEnabled: boolean;
     private replayBufferSize: number;
@@ -21,6 +23,10 @@ export class NoelEventImp implements NoelEvent {
         config = config || {};
 
         if (!config.name) throw new NoelEventConfigError('config.name:string is required');
+        this.name = config.name;
+
+        if (!config.noel) throw new NoelEventConfigError('config.noel:Noel is required');
+        this.noel = config.noel;
 
         if (config.logger) this.setLogger(config.logger);
 
@@ -47,16 +53,17 @@ export class NoelEventImp implements NoelEvent {
         const listeners = this.listeners;
         if (listeners) {
             listeners.forEach(listener => listener(...eventArgs));
-            if (this.replayEnabled) this.pushEventArgsToReplayBuffer(eventArgs);
         } else if (!this.replayEnabled && this.noListenersWarning) {
             this.logWarn(`Event "${this.name}" was emitted but has no listeners.`);
         }
+        if (this.replayEnabled) this.pushEventArgsToReplayBuffer(eventArgs);
     }
 
     on(listener: NoelEventListener): NoelEventListenerManager {
+        if (typeof listener !== 'function') throw new NoelEventListenerError('Given listener is not a function');
         const listeners = this.getListeners();
         listeners.add(listener);
-        return new NoelEventListenerManagerImp(listener, this);
+        return new NoelEventListenerManagerImp(listener, this, this.noel);
     }
 
     removeListener(listener: NoelEventListener): void {

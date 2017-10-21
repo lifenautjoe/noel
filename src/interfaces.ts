@@ -2,6 +2,7 @@
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
 import { NoelEventListener } from './types';
+import NoelImp from './noel';
 
 export interface Noel {
     replayIsEnabled(): boolean;
@@ -29,6 +30,8 @@ export interface Noel {
     removeListener(eventName: string, listener: NoelEventListener): void;
 
     getEvent(eventName: string): NoelEvent;
+
+    removeEvent(eventName: string): void;
 }
 
 export interface NoelConfig {
@@ -40,7 +43,7 @@ export interface NoelConfig {
 export interface NoelEventListenerManager {
     remove(): void;
 
-    replay(bufferSize: number): NoelEventListenerManager;
+    replay(bufferSize?: number): NoelEventListenerManager;
 }
 
 export interface NoelEvent {
@@ -75,6 +78,7 @@ export interface NoelEventConfig {
     replay?: boolean;
     replayBufferSize?: number;
     noListenersWarning?: boolean;
+    noel?: NoelImp;
 }
 
 export interface NoelLogger {

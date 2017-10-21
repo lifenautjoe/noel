@@ -6,12 +6,15 @@ import { NoelEventListenerManager } from './interfaces';
 import { NoelEventListener } from './types';
 import { NoelEventImp } from './event';
 import { NoelEventReplayNotEnabled } from './errors';
+import NoelImp from './noel';
 
 export class NoelEventListenerManagerImp implements NoelEventListenerManager {
-    constructor(private listener: NoelEventListener, private event: NoelEventImp) {}
+    constructor(private listener: NoelEventListener, private event: NoelEventImp, private noel: NoelImp) {}
 
     remove() {
-        return this.event.removeListener(this.listener);
+        // We remove it from noel instead of the event itself because noel will remove it
+        // if it was the last listener
+        this.noel.removeEventListener(this.event, this.listener);
     }
 
     replay(bufferSize: number): NoelEventListenerManager {

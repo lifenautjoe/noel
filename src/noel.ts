@@ -25,8 +25,7 @@ export class NoelImp implements Noel {
 
         this.replayBufferSize = config.replayBufferSize || 1;
 
-        const replayEnabled = config.replay || false;
-        replayEnabled ? this.enableReplay() : this.disableReplay();
+        this.replayEnabled = typeof config.replay === 'boolean' ? config.replay : true;
 
         const logger = config.logger || defaultLogger;
         this.setLogger(logger);
@@ -47,11 +46,15 @@ export class NoelImp implements Noel {
         if (eventsMap) {
             const event = eventsMap.get(eventName);
             if (event) {
-                event.removeListener(listener);
-                const eventListenersCount = event.countListeners();
-                if (eventListenersCount === 0) this.removeEvent(eventName);
+                this.removeEventListener(event, listener);
             }
         }
+    }
+
+    removeEventListener(event: NoelEventImp, listener: NoelEventListener) {
+        event.removeListener(listener);
+        const eventListenersCount = event.countListeners();
+        if (eventListenersCount === 0) this.removeEvent(event.getName());
     }
 
     setLogger(logger: NoelLogger): void {
@@ -122,7 +125,7 @@ export class NoelImp implements Noel {
         return event;
     }
 
-    private removeEvent(eventName: string) {
+    removeEvent(eventName: string) {
         const eventsMap = this.eventsMap;
         if (eventsMap) {
             eventsMap.delete(eventName);
@@ -133,7 +136,9 @@ export class NoelImp implements Noel {
         return new NoelEventImp({
             name: eventName,
             replay: this.replayEnabled,
-            replayBufferSize: this.replayBufferSize
+            replayBufferSize: this.replayBufferSize,
+            noel: this,
+            logger: this.logger
         });
     }
 
