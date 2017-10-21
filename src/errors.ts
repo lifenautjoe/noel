@@ -39,3 +39,10 @@ export class NoelEventConfigError extends NoelEventError {
         this.name = 'NoelEventConfigError';
     }
 }
+
+export class NoelEventListenerError extends NoelEventError {
+    constructor(message: string) {
+        super(message);
+        this.name = 'NoelEventListenerError';
+    }
+}
