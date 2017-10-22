@@ -54,7 +54,7 @@ export class NoelEventImp implements NoelEvent {
         if (listeners) {
             listeners.forEach(listener => listener(...eventArgs));
         } else if (!this.replayEnabled && this.noListenersWarning) {
-            this.logWarn(`Event "${this.name}" was emitted but has no listeners.`);
+            this.logWarn(`Event "${this.name}" was emitted but had no listeners.`);
         }
         if (this.replayEnabled) this.pushEventArgsToReplayBuffer(eventArgs);
     }

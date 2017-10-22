@@ -1,7 +1,6 @@
 import Noel from '../src/noel';
 import { NoelLoggerImp } from '../src/logger';
 import { NoelEventConfigError, NoelEventListenerError } from '../src/errors';
-import { NoelEventListenerManager } from '../src/interfaces';
 import { NoelEventListenerManagerImp } from '../src/event-listener-manager';
 import { NoelEventImp } from '../src/event';
 
@@ -102,16 +101,26 @@ describe('Noel', () => {
                     it('should remove the event listener', () => {
                         const noel = new Noel();
                         const eventName = generateRandomString();
+                        const numberOfOtherListeners = generateRandomIntegerBetween(1, 20);
+                        const otherListeners = [];
+                        for (let i = 0; i < numberOfOtherListeners; i++) {
+                            const otherListener = () => {};
+                            noel.on(eventName, otherListener);
+                            otherListeners.push(otherListener);
+                        }
                         const eventListener = () => {};
-                        const secondEventListener = () => {};
+
                         const eventListenerManager = noel.on(eventName, eventListener);
-                        noel.on(eventName, secondEventListener);
                         eventListenerManager.remove();
+
                         const event = noel['eventsMap'].get(eventName);
                         expect(event).toBeInstanceOf(NoelEventImp);
-                        const eventListeners = event['listeners'];
 
-                        expect(eventListeners.has(secondEventListener)).toBeTruthy();
+                        const eventListeners = event['listeners'];
+                        otherListeners.forEach(otherListener => {
+                            expect(eventListeners.has(otherListener));
+                        });
+
                         expect(eventListeners.has(eventListener)).toBeFalsy();
                     });
                 });
@@ -170,7 +179,40 @@ describe('Noel', () => {
                     });
 
                     describe('when bufferSize > availableBufferSize', () => {
-                        it('should replay the available buffer emits and show a warning', () => {});
+                        it('should replay the available buffer emits and show a warning', () => {
+                            const bufferSize = generateRandomIntegerBetween(1, 10);
+                            const bufferToReplay = bufferSize + 1;
+                            const logger = {
+                                warn: jest.fn()
+                            };
+                            const noel = new Noel({
+                                replay: true,
+                                logger,
+                                replayBufferSize: bufferSize
+                            });
+                            const eventName = generateRandomString();
+
+                            const emitArgs = [];
+
+                            // Fill up the buffer
+                            for (let i = 0; i < bufferSize; i++) {
+                                const emitArg = generateRandomItem();
+                                noel.emit(eventName, emitArg);
+                                emitArgs.push(emitArg);
+                            }
+
+                            const listener = jest.fn();
+                            noel.on(eventName, listener).replay(bufferToReplay);
+
+                            expect(listener).toHaveBeenCalledTimes(bufferSize);
+
+                            for (let i = 0; i < bufferSize; i++) {
+                                expect(listener).toHaveBeenCalledWith(emitArgs[i]);
+                            }
+
+                            const expectedWarnMessage = `Attempted to replay ${bufferToReplay} emits from the event "${eventName}" but the replay buffer size is set to ${bufferSize}.`;
+                            expect(logger.warn).toHaveBeenCalledWith(expectedWarnMessage);
+                        });
                     });
                 });
             });
