@@ -3,6 +3,7 @@ import { NoelLoggerImp } from '../src/logger';
 import { NoelBuffeSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled, NoelReplayNotEnabledError } from '../src/errors';
 import { NoelEventListenerManagerImp } from '../src/event-listener-manager';
 import { NoelEventImp } from '../src/event';
+import { NoelEvent } from '../src/interfaces';
 
 describe('Noel', () => {
     const defaultReplayEnabledVal = true;
@@ -72,6 +73,53 @@ describe('Noel', () => {
                 const event = noel.getEvent(eventName);
                 expect(event).toBeInstanceOf(NoelEventImp);
                 expect(noel['eventsMap'].get(eventName)).toBe(event);
+            });
+        });
+    });
+
+    describe('removeEvent()', () => {
+        describe('when the event exists', () => {
+            it('it should remove the event', () => {
+                const noel = new Noel();
+                const eventName = generateRandomString();
+                noel.on(eventName, () => {});
+                noel.removeEvent(eventName);
+                expect(noel['eventsMap'].get(eventName)).toBeUndefined();
+            });
+        });
+
+        describe('when the event doesnt exist', () => {
+            it('should do nothing', () => {
+                const noel = new Noel();
+                noel.removeEvent(generateRandomString());
+                expect(noel['eventsMap']).toBeNull();
+            });
+        });
+    });
+
+    describe('removeListener(eventName: string, eventListener: NoelEventListener)', () => {
+        describe('if its the last event listener', () => {
+            it('should remove the event', () => {
+                const listener = () => {};
+                const noel = new Noel();
+                const eventName = generateRandomString();
+                noel.on(eventName, listener);
+                noel.removeListener(eventName, listener);
+                expect(noel['eventsMap'].get(eventName)).toBeUndefined();
+            });
+        });
+
+        describe('if the event has more listeners', () => {
+            it('should remove the listener from the event', () => {
+                const listener = () => {};
+                const noel = new Noel();
+                const eventName = generateRandomString();
+                fillNoelWithRandomEventListeners(noel, eventName);
+                noel.on(eventName, listener);
+                noel.removeListener(eventName, listener);
+                const event = noel['eventsMap'].get(eventName);
+                expect(event).toBeInstanceOf(NoelEventImp);
+                expect(event['listeners'].has(listener)).toBe(false);
             });
         });
     });
@@ -571,6 +619,17 @@ describe('Noel', () => {
 });
 
 // For all smarty pants around, I am well aware this is pseudo-random
+
+function fillNoelWithRandomEventListeners(noel, eventName) {
+    const listenersAmount = generateRandomIntegerBetween(1, 20);
+    const listeners = [];
+    for (let i = 0; i < listenersAmount; i++) {
+        const listener = () => {};
+        noel.on(eventName, listener);
+        listeners.push(listener);
+    }
+    return listeners;
+}
 
 function fillNoelWithRandomEvents(noel: Noel) {
     const numberOfEvents = generateRandomIntegerBetween(1, 10);
