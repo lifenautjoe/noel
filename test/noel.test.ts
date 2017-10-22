@@ -37,6 +37,22 @@ describe('Noel', () => {
         });
     });
 
+    describe('setLogger(logger: NoelLogger)', () => {
+        it('should override the previous logger', () => {
+            const noel = new Noel();
+            const newLogger = {
+                warn: () => {}
+            };
+            fillNoelWithRandomEvents(noel);
+            noel.setLogger(newLogger);
+            expect(noel['logger']).toBe(newLogger);
+            const events = noel['eventsMap'];
+            for (const event of events.values()) {
+                expect(event['logger']).toBe(newLogger);
+            }
+        });
+    });
+
     describe('getEvent(): NoelEvent', () => {
         describe('when the event already exists', () => {
             it('should return the existing event', () => {
@@ -525,6 +541,14 @@ describe('Noel', () => {
 });
 
 // For all smarty pants around, I am well aware this is pseudo-random
+
+function fillNoelWithRandomEvents(noel: Noel) {
+    const numberOfEvents = generateRandomIntegerBetween(1, 10);
+    for (let i = 0; i < numberOfEvents; i++) {
+        const eventName = generateRandomString();
+        noel.on(eventName, () => {});
+    }
+}
 
 function generateRandomItem(skipArr?) {
     const itemType = generateRandomIntegerBetween(0, skipArr ? 5 : 6);
