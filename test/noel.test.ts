@@ -68,6 +68,56 @@ describe('Noel', () => {
         });
     });
 
+    describe('enableReplay()', () => {
+        it('should enable replay', () => {
+            const noel = new Noel({
+                replay: false
+            });
+            noel.enableReplay();
+            expect(noel['replayEnabled']).toBe(true);
+        });
+    });
+
+    describe('disableReplay()', () => {
+        it('should disable replay and set events replayBuffer=null & replayEnabled=false', () => {
+            const noel = new Noel({
+                replay: true
+            });
+
+            const numberOfEvents = generateRandomIntegerBetween(1, 10);
+            for (let i = 0; i < numberOfEvents; i++) {
+                noel.on(generateRandomString(), () => {});
+            }
+            noel.disableReplay();
+            expect(noel['replayEnabled']).toBe(false);
+            const events = noel['eventsMap'].values();
+            for (const event of events) {
+                expect(event['replayBuffer']).toBeNull();
+                expect(event['replayEnabled']).toBe(false);
+            }
+        });
+    });
+
+    describe('replayIsEnabled()', () => {
+        describe('when replay is enabled', () => {
+            it('should return true', () => {
+                const noel = new Noel({
+                    replay: true
+                });
+                expect(noel.replayIsEnabled()).toBe(true);
+            });
+        });
+
+        describe('when replay is disabled', () => {
+            it('should return false', () => {
+                const noel = new Noel({
+                    replay: false
+                });
+                expect(noel.replayIsEnabled()).toBe(false);
+            });
+        });
+    });
+
     describe('setReplayBufferSize(bufferSize: number)', () => {
         describe('when replay is enabled', () => {
             describe('when bufferSize > 0', () => {
