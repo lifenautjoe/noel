@@ -1,6 +1,6 @@
 {
   "name": "noel",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "",
   "keywords": [],
   "main": "dist/noel.umd.js",
