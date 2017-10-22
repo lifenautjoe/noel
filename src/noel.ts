@@ -59,6 +59,11 @@ export class NoelImp implements Noel {
 
     setLogger(logger: NoelLogger): void {
         this.logger = logger;
+        if (this.eventsMap) {
+            for (const event of this.eventsMap.values()) {
+                event.setLogger(logger);
+            }
+        }
     }
 
     enableNoEventListenersWarning(): void {
