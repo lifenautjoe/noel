@@ -12,10 +12,10 @@ export class NoelError extends BaseError {
     }
 }
 
-export class NoelReplayNotEnabled extends NoelError {
+export class NoelReplayNotEnabledError extends NoelError {
     constructor() {
         super('Replay for noel is not enabled');
-        this.name = 'NoelReplayNotEnabled';
+        this.name = 'NoelReplayNotEnabledError';
     }
 }
 
@@ -44,5 +44,12 @@ export class NoelEventListenerError extends NoelEventError {
     constructor(message: string) {
         super(message);
         this.name = 'NoelEventListenerError';
+    }
+}
+
+export class NoelBuffeSizeNotValidError extends NoelEventError {
+    constructor(message: string) {
+        super(message);
+        this.name = 'NoelBuffeSizeNotValidError';
     }
 }
