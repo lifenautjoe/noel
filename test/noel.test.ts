@@ -114,6 +114,36 @@ describe('Noel', () => {
         });
     });
 
+    describe('enableNoEventListenersWarning()', () => {
+        it('should enable the no event listeners warning', () => {
+            const noel = new Noel({
+                replay: false
+            });
+            fillNoelWithRandomEvents(noel);
+            noel.enableNoEventListenersWarning();
+            const events = noel['eventsMap'];
+            expect(noel['noEventListenersWarning']).toBe(true);
+            for (const event of events.values()) {
+                expect(event['noListenersWarning']).toBe(true);
+            }
+        });
+    });
+
+    describe('disableNoEventListenersWarning()', () => {
+        it('should disable the no event listeners warning', () => {
+            const noel = new Noel({
+                replay: false
+            });
+            fillNoelWithRandomEvents(noel);
+            noel.disableNoEventListenersWarning();
+            const events = noel['eventsMap'];
+            expect(noel['noEventListenersWarning']).toBe(false);
+            for (const event of events.values()) {
+                expect(event['noListenersWarning']).toBe(false);
+            }
+        });
+    });
+
     describe('replayIsEnabled()', () => {
         describe('when replay is enabled', () => {
             it('should return true', () => {
