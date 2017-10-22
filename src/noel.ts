@@ -77,7 +77,7 @@ export class NoelImp implements Noel {
     }
 
     disableNoEventListenersWarning(): void {
-        if (!this.noEventListenersWarning) return;
+        if (typeof this.noEventListenersWarning !== 'undefined' && !this.noEventListenersWarning) return;
         this.noEventListenersWarning = false;
         if (this.eventsMap) {
             for (const event of this.eventsMap.values()) {
