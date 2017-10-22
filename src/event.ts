@@ -4,7 +4,7 @@
 import { NoelEvent, NoelEventConfig, NoelEventListenerManager, NoelLogger } from './interfaces';
 import { NoelEventListener } from './types';
 import { NoelEventListenerManagerImp } from './event-listener-manager';
-import { NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled } from './errors';
+import { NoelBuffeSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled } from './errors';
 import NoelImp from './noel';
 
 export class NoelEventImp implements NoelEvent {
@@ -22,7 +22,7 @@ export class NoelEventImp implements NoelEvent {
     constructor(config: NoelEventConfig) {
         config = config || {};
 
-        if (!config.name) throw new NoelEventConfigError('config.name:string is required');
+        if (typeof config.name === 'undefined') throw new NoelEventConfigError('config.name:string is required');
         this.name = config.name;
 
         if (!config.noel) throw new NoelEventConfigError('config.noel:Noel is required');
@@ -34,14 +34,11 @@ export class NoelEventImp implements NoelEvent {
 
         config.noListenersWarning ? this.enableNoListenersWarning() : this.disableNoListenersWarning();
 
-        const replayEnabled = config.replay || false;
-        replayEnabled ? this.enableReplay() : this.disableReplay();
+        this.replayEnabled = typeof config.replay === 'boolean' ? config.replay : false;
     }
 
     enableReplay(): void {
-        if (this.replayEnabled) return;
         this.replayEnabled = true;
-        this.replayBuffer = [];
     }
 
     disableReplay(): void {
@@ -86,9 +83,11 @@ export class NoelEventImp implements NoelEvent {
 
     setReplayBufferSize(replayBufferSize: number): void {
         if (!this.replayEnabled) throw new NoelEventReplayNotEnabled(this);
+        if (replayBufferSize <= 0) throw new NoelBuffeSizeNotValidError('Replay buffer size needs to be >=1');
+        this.replayBufferSize = replayBufferSize;
         const replayBuffer = this.replayBuffer;
         if (!replayBuffer) return;
-        this.replayBuffer = replayBuffer.slice(0, replayBufferSize);
+        this.setReplayBuffer(replayBuffer.slice(0, replayBufferSize));
     }
 
     getReplayBufferAmount(replayBufferAmount: number): Array<any> {
@@ -123,6 +122,10 @@ export class NoelEventImp implements NoelEvent {
 
     getReplayIsEnabled(): boolean {
         return this.replayEnabled;
+    }
+
+    private setReplayBuffer(replayBuffer: Array<any>) {
+        this.replayBuffer = replayBuffer;
     }
 
     private getListeners(): Set<NoelEventListener> {
