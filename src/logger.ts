@@ -3,19 +3,18 @@
  */
 import { NoelLogger } from './interfaces';
 
+const consolePoly = {
+    warn: () => {}
+};
+
 export class NoelLoggerImp implements NoelLogger {
     private console: any;
 
     constructor() {
-        if (console) {
-            this.console = console;
-        }
+        this.console = typeof console === 'undefined' ? consolePoly : console;
     }
 
     warn(warn: string) {
-        if (this.console) {
-            const logFn = this.console.warn || this.console.log;
-            logFn(warn);
-        }
+        this.console.warn(warn);
     }
 }

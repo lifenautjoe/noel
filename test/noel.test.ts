@@ -18,6 +18,22 @@ describe('Noel', () => {
             expect(logger).toBeDefined();
             expect(typeof logger.warn === 'function').toBeTruthy();
         });
+
+        describe('when console is a global object', () => {
+            it('logger should use it', () => {
+                const noel = new Noel();
+                expect(noel['logger']['console']).toBe(global.console);
+            });
+        });
+
+        describe('when console is not a global object', () => {
+            it('logger should use a console mock', () => {
+                delete global.console;
+                const noel = new Noel();
+                const loggerConsole = noel['logger']['console'];
+                expect(typeof loggerConsole).toBe('object');
+            });
+        });
     });
 
     describe('constructor(config)', () => {
@@ -537,13 +553,12 @@ describe('Noel', () => {
 
             describe('when the event has no listeners', () => {
                 it('should not log a warning', () => {
-                    const logger = {
-                        warn: jest.fn()
-                    };
                     const noel = new Noel({
-                        replay: true,
-                        logger
+                        replay: true
                     });
+
+                    const logger = noel['logger'];
+                    logger.warn = jest.fn(logger.warn);
                     noel.emit(generateRandomString(), () => {});
                     expect(logger.warn).not.toHaveBeenCalled();
                 });
@@ -568,13 +583,11 @@ describe('Noel', () => {
 
             describe('when the event has no listeners', () => {
                 it('should log a warning', () => {
-                    const logger = {
-                        warn: jest.fn()
-                    };
                     const noel = new Noel({
-                        replay: false,
-                        logger
+                        replay: false
                     });
+                    const logger = noel['logger'];
+                    logger.warn = jest.fn(logger.warn);
                     const eventName = generateRandomString();
                     noel.emit(eventName, generateRandomItem());
 
