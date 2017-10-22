@@ -118,6 +118,46 @@ describe('Noel', () => {
         });
     });
 
+    describe('clearEventsReplayBuffers()', () => {
+        describe('when replay is enabled', () => {
+            it('should clear the events replay buffers', () => {
+                const replayBufferSize = generateRandomIntegerBetween(1, 100);
+                const noel = new Noel({
+                    replay: true,
+                    replayBufferSize
+                });
+                const numberOfEvents = generateRandomIntegerBetween(1, 10);
+                for (let i = 0; i < numberOfEvents; i++) {
+                    const eventName = generateRandomString();
+                    noel.on(eventName, () => {});
+                    for (let j = 0; j < generateRandomIntegerBetween(0, replayBufferSize); j++) {
+                        noel.emit(eventName, generateRandomItem());
+                    }
+                }
+                const events = noel['eventsMap'];
+                for (const event of events.values()) {
+                    expect(event['replayBuffer']).toBeDefined();
+                }
+                noel.clearEventsReplayBuffers();
+                for (const event of events.values()) {
+                    expect(event['replayBuffer']).toBeNull();
+                }
+            });
+        });
+
+        describe('when replay is not enabled', () => {
+            it('should throw a NoelReplayNotEnabledError', () => {
+                const noel = new Noel({
+                    replay: false
+                });
+
+                expect(() => {
+                    noel.clearEventsReplayBuffers();
+                }).toThrow(NoelReplayNotEnabledError);
+            });
+        });
+    });
+
     describe('setReplayBufferSize(bufferSize: number)', () => {
         describe('when replay is enabled', () => {
             describe('when bufferSize > 0', () => {
