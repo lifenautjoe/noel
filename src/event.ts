@@ -32,7 +32,8 @@ export class NoelEventImp implements NoelEvent {
 
         this.replayBufferSize = config.replayBufferSize || 1;
 
-        config.noListenersWarning ? this.enableNoListenersWarning() : this.disableNoListenersWarning();
+        const noListenersWarning = typeof config.noListenersWarning === 'boolean' ? config.noListenersWarning : true;
+        noListenersWarning ? this.enableNoListenersWarning() : this.disableNoListenersWarning();
 
         this.replayEnabled = typeof config.replay === 'boolean' ? config.replay : false;
     }
