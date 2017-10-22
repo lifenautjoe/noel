@@ -23,6 +23,8 @@ export class NoelImp implements Noel {
     constructor(config?: NoelConfig) {
         config = config || {};
 
+        this.noEventListenersWarning = typeof config.noEventListenersWarning === 'boolean' ? config.noEventListenersWarning : true;
+
         this.replayBufferSize = config.replayBufferSize || 1;
 
         this.replayEnabled = typeof config.replay === 'boolean' ? config.replay : true;
@@ -146,6 +148,7 @@ export class NoelImp implements Noel {
             name: eventName,
             replay: this.replayEnabled,
             replayBufferSize: this.replayBufferSize,
+            noListenersWarning: this.noEventListenersWarning,
             noel: this,
             logger: this.logger
         });

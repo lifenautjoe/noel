@@ -37,6 +37,7 @@ export interface Noel {
 export interface NoelConfig {
     replay?: boolean;
     replayBufferSize?: number;
+    noEventListenersWarning?: boolean;
     logger?: NoelLogger;
 }
 
