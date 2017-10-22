@@ -93,6 +93,8 @@ export class NoelImp implements Noel {
     }
 
     enableReplay() {
+        if (this.replayEnabled) return;
+        this.enableEventsReplay();
         this.replayEnabled = true;
     }
 
@@ -143,6 +145,14 @@ export class NoelImp implements Noel {
         }
     }
 
+    clearListenersForEvent(eventName: string) {
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            const event = eventsMap.get(eventName);
+            if (event) event.clearListeners();
+        }
+    }
+
     private makeEvent(eventName: string): NoelEventImp {
         return new NoelEventImp({
             name: eventName,
@@ -172,6 +182,16 @@ export class NoelImp implements Noel {
             const events = eventsMap.values();
             for (const event of events) {
                 event.disableReplay();
+            }
+        }
+    }
+
+    private enableEventsReplay() {
+        const eventsMap = this.eventsMap;
+        if (eventsMap) {
+            const events = eventsMap.values();
+            for (const event of events) {
+                event.enableReplay();
             }
         }
     }
