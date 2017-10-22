@@ -103,6 +103,7 @@ export class NoelImp implements Noel {
     }
 
     clearEventsReplayBuffers() {
+        if (!this.replayEnabled) throw new NoelReplayNotEnabledError();
         const events = this.getEvents();
         for (const event of events) {
             event.clearReplayBuffer();
