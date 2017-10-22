@@ -431,6 +431,93 @@ describe('Noel', () => {
         });
     });
 
+    describe('emit(eventName:string, ...eventArgs: Array<any>)', () => {
+        it('should call the listeners with the eventArgs', () => {
+            const noel = new Noel();
+            const eventName = generateRandomString();
+            const eventListeners = fillNoelWithRandomEventListeners(noel, eventName);
+            const eventArgs = generateRandomArray();
+            noel.emit(eventName, ...eventArgs);
+
+            eventListeners.forEach(eventListener => {
+                expect(eventListener).toHaveBeenCalledWith(...eventArgs);
+            });
+        });
+
+        describe('when replay is enabled', () => {
+            describe('when the event has listeners', () => {
+                it('should add the eventArgs to the replay buffer', () => {
+                    const replayBufferSize = generateRandomIntegerBetween(1, 20);
+                    const noel = new Noel({
+                        replay: true,
+                        replayBufferSize
+                    });
+                    const eventName = generateRandomString();
+                    fillNoelWithRandomEventListeners(noel, eventName);
+
+                    const emitAmount = generateRandomIntegerBetween(1, replayBufferSize);
+                    const emitArgs = emitNoelEventWithRandomArgs(noel, eventName, emitAmount);
+
+                    const event = noel['eventsMap'].get(eventName);
+                    const eventReplayBuffer = event['replayBuffer'];
+
+                    eventReplayBuffer.forEach(eventReplayBufferItem => {
+                        eventReplayBufferItem.forEach(value => {
+                            expect(emitArgs).toContain(value);
+                        });
+                    });
+                });
+            });
+
+            describe('when the event has no listeners', () => {
+                it('should not log a warning', () => {
+                    const logger = {
+                        warn: jest.fn()
+                    };
+                    const noel = new Noel({
+                        replay: true,
+                        logger
+                    });
+                    noel.emit(generateRandomString(), () => {});
+                    expect(logger.warn).not.toHaveBeenCalled();
+                });
+            });
+        });
+
+        describe('when replay is not enabled', () => {
+            describe('when the event has listeners', () => {
+                it('should not add the eventArgs to the replay buffer', () => {
+                    const noel = new Noel({
+                        replay: false
+                    });
+                    const eventName = generateRandomString();
+                    fillNoelWithRandomEventListeners(noel, eventName);
+
+                    emitNoelEventWithRandomArgs(noel, eventName);
+
+                    const event = noel['eventsMap'].get(eventName);
+                    expect(event['replayBuffer']).toBeNull();
+                });
+            });
+
+            describe('when the event has no listeners', () => {
+                it('should log a warning', () => {
+                    const logger = {
+                        warn: jest.fn()
+                    };
+                    const noel = new Noel({
+                        replay: false,
+                        logger
+                    });
+                    const eventName = generateRandomString();
+                    noel.emit(eventName, generateRandomItem());
+
+                    expect(logger.warn).toHaveBeenCalledWith(`Event "${eventName}" was emitted but had no listeners.`);
+                });
+            });
+        });
+    });
+
     describe('on(eventName: string, eventListener: NoelEventListener)', () => {
         describe('when no eventName is given', () => {
             it('should throw a NoelEventConfigError', () => {
@@ -620,11 +707,22 @@ describe('Noel', () => {
 
 // For all smarty pants around, I am well aware this is pseudo-random
 
+function emitNoelEventWithRandomArgs(noel, eventName, emitAmount?) {
+    const eventEmits = emitAmount || generateRandomIntegerBetween(1, 20);
+    const args = [];
+    for (let i = 0; i < eventEmits; i++) {
+        const arg = generateRandomItem();
+        noel.emit(eventName, arg);
+        args.push(arg);
+    }
+    return args;
+}
+
 function fillNoelWithRandomEventListeners(noel, eventName) {
     const listenersAmount = generateRandomIntegerBetween(1, 20);
     const listeners = [];
     for (let i = 0; i < listenersAmount; i++) {
-        const listener = () => {};
+        const listener = jest.fn();
         noel.on(eventName, listener);
         listeners.push(listener);
     }
