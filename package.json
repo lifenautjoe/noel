@@ -1,6 +1,6 @@
 {
   "name": "noel",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "description": "",
   "keywords": [],
   "main": "dist/noel.umd.js",
@@ -31,7 +31,9 @@
     "commit": "git-cz",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepush": "npm run test:prod && npm run build",
+    "commitmsg": "validate-commit-msg"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -93,7 +95,7 @@
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
-    "semantic-release": "^8.0.0",
+    "semantic-release": "^8.2.0",
     "ts-jest": "^21.0.0",
     "ts-node": "^3.0.6",
     "tslint": "^5.4.3",
