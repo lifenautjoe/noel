@@ -1,5 +1,9 @@
 # noel
 
+## Work in progress.
+
+The code is done and tested. Documentation in progress.
+
 ### NPM scripts
 
  - `npm t`: Run test suite
