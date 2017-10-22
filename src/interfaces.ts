@@ -81,7 +81,7 @@ export interface NoelEventConfig {
     replay?: boolean;
     replayBufferSize?: number;
     noListenersWarning?: boolean;
-    noel?: NoelImp;
+    noel: NoelImp;
 }
 
 export interface NoelLogger {

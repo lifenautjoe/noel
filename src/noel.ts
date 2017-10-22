@@ -165,7 +165,6 @@ export class NoelImp implements Noel {
     }
 
     private setEventsReplayBuffersSize(replayBuffersSize: number): void {
-        if (!this.replayEnabled) throw new NoelReplayNotEnabledError();
         const eventsMap = this.eventsMap;
         if (eventsMap) {
             const events = eventsMap.values();
@@ -176,7 +175,6 @@ export class NoelImp implements Noel {
     }
 
     private disableEventsReplay() {
-        if (!this.replayEnabled) throw new NoelReplayNotEnabledError();
         const eventsMap = this.eventsMap;
         if (eventsMap) {
             const events = eventsMap.values();
