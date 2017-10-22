@@ -39,11 +39,24 @@ describe('Noel', () => {
 
     describe('getEvent(): NoelEvent', () => {
         describe('when the event already exists', () => {
-            it('should return the existing event', () => {});
+            it('should return the existing event', () => {
+                const noel = new Noel();
+                const eventName = generateRandomString();
+                noel.on(eventName, () => {});
+                noel.emit(eventName, generateRandomItem());
+                const event = noel['eventsMap'].get(eventName);
+                expect(noel.getEvent(eventName)).toBe(event);
+            });
         });
 
         describe('when the event does not exist', () => {
-            it('should create, save and return the new event', () => {});
+            it('should create, save and return the new event', () => {
+                const noel = new Noel();
+                const eventName = generateRandomString();
+                const event = noel.getEvent(eventName);
+                expect(event).toBeInstanceOf(NoelEventImp);
+                expect(noel['eventsMap'].get(eventName)).toBe(event);
+            });
         });
     });
 
