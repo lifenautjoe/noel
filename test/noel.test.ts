@@ -1,6 +1,6 @@
 import Noel from '../src/noel';
 import { NoelLoggerImp } from '../src/logger';
-import { NoelEventConfigError, NoelEventListenerError } from '../src/errors';
+import { NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled } from '../src/errors';
 import { NoelEventListenerManagerImp } from '../src/event-listener-manager';
 import { NoelEventImp } from '../src/event';
 
@@ -214,6 +214,18 @@ describe('Noel', () => {
                             expect(logger.warn).toHaveBeenCalledWith(expectedWarnMessage);
                         });
                     });
+                });
+            });
+
+            describe('when replay is disabled', () => {
+                it('should throw a NoelEventReplayNotEnabled error', () => {
+                    const noel = new Noel({
+                        replay: false
+                    });
+                    const eventName = generateRandomString();
+                    expect(() => {
+                        noel.on(eventName, () => {}).replay();
+                    }).toThrow(NoelEventReplayNotEnabled);
                 });
             });
         });
