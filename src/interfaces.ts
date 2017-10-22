@@ -29,6 +29,8 @@ export interface Noel {
 
     removeListener(eventName: string, listener: NoelEventListener): void;
 
+    clearListenersForEvent(eventName: string): void;
+
     getEvent(eventName: string): NoelEvent;
 
     removeEvent(eventName: string): void;

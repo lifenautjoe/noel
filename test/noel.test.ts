@@ -3,7 +3,6 @@ import { NoelLoggerImp } from '../src/logger';
 import { NoelBuffeSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled, NoelReplayNotEnabledError } from '../src/errors';
 import { NoelEventListenerManagerImp } from '../src/event-listener-manager';
 import { NoelEventImp } from '../src/event';
-import { NoelEvent } from '../src/interfaces';
 
 describe('Noel', () => {
     const defaultReplayEnabledVal = true;
@@ -26,15 +25,18 @@ describe('Noel', () => {
             const logger = new NoelLoggerImp();
             const replay = false;
             const replayBufferSize = 20;
+            const noEventListenersWarning = false;
 
             const noel = new Noel({
                 replay,
                 replayBufferSize,
+                noEventListenersWarning,
                 logger
             });
             expect(noel['logger']).toBe(logger);
             expect(noel['replayBufferSize']).toBe(replayBufferSize);
             expect(noel['replayEnabled']).toBe(replay);
+            expect(noel['noEventListenersWarning']).toBe(noEventListenersWarning);
         });
     });
 
@@ -124,6 +126,32 @@ describe('Noel', () => {
         });
     });
 
+    describe('clearListeners(eventName: string)', () => {
+        describe('when event has listeners', () => {
+            it('should clear its listeners', () => {
+                const noel = new Noel();
+                const eventName = generateRandomString();
+                fillNoelWithRandomEventListeners(noel, eventName);
+
+                noel.clearListenersForEvent(eventName);
+
+                const event = noel['eventsMap'].get(eventName);
+                expect(event['listeners']).toBeNull();
+            });
+        });
+
+        describe('when event has no listeners', () => {
+            it('should do nothing', () => {
+                const noel = new Noel();
+                const eventName = generateRandomString();
+
+                noel.clearListenersForEvent(eventName);
+
+                expect(noel['eventsMap']).toBeNull();
+            });
+        });
+    });
+
     describe('replayIsEnabled()', () => {
         it('should return whether the replay is enabled', () => {
             const noel = new Noel();
@@ -133,12 +161,22 @@ describe('Noel', () => {
     });
 
     describe('enableReplay()', () => {
-        it('should enable replay', () => {
+        it('should enable replay and set events replayEnabled=true', () => {
             const noel = new Noel({
                 replay: false
             });
+
+            const numberOfEvents = generateRandomIntegerBetween(1, 10);
+            for (let i = 0; i < numberOfEvents; i++) {
+                noel.on(generateRandomString(), () => {});
+            }
             noel.enableReplay();
             expect(noel['replayEnabled']).toBe(true);
+            const events = noel['eventsMap'].values();
+            for (const event of events) {
+                expect(event['replayBuffer']).toBeNull();
+                expect(event['replayEnabled']).toBe(true);
+            }
         });
     });
 
@@ -163,32 +201,60 @@ describe('Noel', () => {
     });
 
     describe('enableNoEventListenersWarning()', () => {
-        it('should enable the no event listeners warning', () => {
-            const noel = new Noel({
-                replay: false
+        describe('when noEventListenersWarning is disabled', () => {
+            it('should enable the no event listeners warning', () => {
+                const noel = new Noel({
+                    replay: false,
+                    noEventListenersWarning: false
+                });
+                fillNoelWithRandomEvents(noel);
+                noel.enableNoEventListenersWarning();
+                const events = noel['eventsMap'];
+                expect(noel['noEventListenersWarning']).toBe(true);
+                for (const event of events.values()) {
+                    expect(event['noListenersWarning']).toBe(true);
+                }
             });
-            fillNoelWithRandomEvents(noel);
-            noel.enableNoEventListenersWarning();
-            const events = noel['eventsMap'];
-            expect(noel['noEventListenersWarning']).toBe(true);
-            for (const event of events.values()) {
-                expect(event['noListenersWarning']).toBe(true);
-            }
+        });
+
+        describe('when noEventListenersWarning is enabled', () => {
+            it('should do nothing', () => {
+                const noel = new Noel({
+                    replay: false,
+                    noEventListenersWarning: true
+                });
+                noel.enableNoEventListenersWarning();
+                expect(noel['noEventListenersWarning']).toBe(true);
+            });
         });
     });
 
     describe('disableNoEventListenersWarning()', () => {
-        it('should disable the no event listeners warning', () => {
-            const noel = new Noel({
-                replay: false
+        describe('when noEventListenersWarning is enabled', () => {
+            it('should disable the no event listeners warning', () => {
+                const noel = new Noel({
+                    replay: false,
+                    noEventListenersWarning: true
+                });
+                fillNoelWithRandomEvents(noel);
+                noel.disableNoEventListenersWarning();
+                const events = noel['eventsMap'];
+                expect(noel['noEventListenersWarning']).toBe(false);
+                for (const event of events.values()) {
+                    expect(event['noListenersWarning']).toBe(false);
+                }
             });
-            fillNoelWithRandomEvents(noel);
-            noel.disableNoEventListenersWarning();
-            const events = noel['eventsMap'];
-            expect(noel['noEventListenersWarning']).toBe(false);
-            for (const event of events.values()) {
-                expect(event['noListenersWarning']).toBe(false);
-            }
+        });
+
+        describe('when noEventListenersWarning is disabled', () => {
+            it('should do nothing', () => {
+                const noel = new Noel({
+                    replay: false,
+                    noEventListenersWarning: false
+                });
+                noel.disableNoEventListenersWarning();
+                expect(noel['noEventListenersWarning']).toBe(false);
+            });
         });
     });
 
