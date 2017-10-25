@@ -1,6 +1,6 @@
 import Noel from '../src/noel';
 import { NoelLoggerImp } from '../src/logger';
-import { NoelBuffeSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled, NoelReplayNotEnabledError } from '../src/errors';
+import { NoelBufferSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled, NoelReplayNotEnabledError } from '../src/errors';
 import { NoelEventListenerManagerImp } from '../src/event-listener-manager';
 import { NoelEventImp } from '../src/event';
 
@@ -412,7 +412,7 @@ describe('Noel', () => {
             });
 
             describe('when bufferSize <=0', () => {
-                it('should throw a NoelBuffeSizeNotValidError', () => {
+                it('should throw a NoelBufferSizeNotValidError', () => {
                     const noel = new Noel({
                         replay: true,
                         replayBufferSize: generateRandomIntegerBetween(1, 100)
@@ -420,7 +420,7 @@ describe('Noel', () => {
                     expect(() => {
                         const newReplayBufferSize = generateRandomIntegerBetween(-100, 0);
                         noel.setReplayBufferSize(newReplayBufferSize);
-                    }).toThrow(NoelBuffeSizeNotValidError);
+                    }).toThrow(NoelBufferSizeNotValidError);
                 });
             });
         });

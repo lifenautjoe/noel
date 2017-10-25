@@ -47,9 +47,9 @@ export class NoelEventListenerError extends NoelEventError {
     }
 }
 
-export class NoelBuffeSizeNotValidError extends NoelEventError {
+export class NoelBufferSizeNotValidError extends NoelEventError {
     constructor(message: string) {
         super(message);
-        this.name = 'NoelBuffeSizeNotValidError';
+        this.name = 'NoelBufferSizeNotValidError';
     }
 }

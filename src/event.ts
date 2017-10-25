@@ -4,7 +4,7 @@
 import { NoelEvent, NoelEventConfig, NoelEventListenerManager, NoelLogger } from './interfaces';
 import { NoelEventListener } from './types';
 import { NoelEventListenerManagerImp } from './event-listener-manager';
-import { NoelBuffeSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled } from './errors';
+import { NoelBufferSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled } from './errors';
 import NoelImp from './noel';
 
 export class NoelEventImp implements NoelEvent {
@@ -84,7 +84,7 @@ export class NoelEventImp implements NoelEvent {
 
     setReplayBufferSize(replayBufferSize: number): void {
         if (!this.replayEnabled) throw new NoelEventReplayNotEnabled(this);
-        if (replayBufferSize <= 0) throw new NoelBuffeSizeNotValidError('Replay buffer size needs to be >=1');
+        if (replayBufferSize <= 0) throw new NoelBufferSizeNotValidError('Replay buffer size needs to be >=1');
         this.replayBufferSize = replayBufferSize;
         const replayBuffer = this.replayBuffer;
         if (!replayBuffer) return;
