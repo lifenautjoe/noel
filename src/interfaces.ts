@@ -60,7 +60,7 @@ export interface NoelEvent {
 
     disableReplay(): void;
 
-    emit(): void;
+    emit(...eventArgs: Array<any>): void;
 
     on(listener: NoelEventListener): NoelEventListenerManager;
 
