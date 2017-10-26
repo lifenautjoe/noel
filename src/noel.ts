@@ -145,7 +145,7 @@ export class NoelImp implements Noel {
         }
     }
 
-    removeAllListenersForEvent(eventName: string) {
+    removeAllListeners(eventName: string) {
         const eventsMap = this.eventsMap;
         if (eventsMap) {
             const event = eventsMap.get(eventName);
