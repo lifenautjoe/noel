@@ -56,13 +56,8 @@ const noel = new Noel();
 // Listen for an event
 noel.on('friday', partyAllNightLong);
 
-
-
 // Emit an event
-noel.emit('luckyNumbersChanged', 1, 5, 9 ...);
-
-// Remove listener
-noel.removeListener('friday', partyAllNightLong);
+noel.emit('friday', arg1, arg2 ....);
 ```
 
 ### Replay events
@@ -77,11 +72,7 @@ noel.on('userChanged', updateAvatarPhoto).replay(x);
 
 ### Remove event listener
 
-
-
 ### Remove all event listeners
-
-
 
 ### 
 
