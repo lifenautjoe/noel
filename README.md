@@ -57,7 +57,6 @@ const noel = new Noel();
 ### Emit and listen to events
 
 ```typescript
-
 // Listen for an event
 noel.on('friday', partyAllNightLong);
 
@@ -87,7 +86,7 @@ noel.removeListener(eventName, eventListener);
 noel.removeAllListeners(eventName, eventListener);
 ```
 
-### Changing the event buffer size
+### Changing the events buffer size
 
 Or in human words, changing the amount of event emissions that are saved for replays.
 
@@ -99,15 +98,41 @@ const noel = new Noel({
     replayBufferSize: aNewBufferSize
 });
 
-// In runtime
+// At runtime
 noel.setReplayBufferSize(anotherBufferSize);
 ```
 
-## Advanced usage
+### Disabling replay
 
-Continue reading on the library GitBook.
+```typescript
+// When creating the noel instance
+const noel = new Noel({
+    replay: false
+});
 
-## Development
+// At runtime
+noel.disableReplay(anotherBufferSize);
+```
+
+### Enabling replay
+
+Please do note that** replay is enabled by default**, so this should only be necessary if it was disabled at runtime.
+
+```typescript
+// At runtime
+noel.enableReplay(anotherBufferSize);
+```
+
+### Disabling the no event listeners warning
+
+When an event is emitted, no listeners have been set AND the replay was disabled so there is no way of doing anything with the emission, a warning will be logged into the console if available. To disable this behaviour:
+
+```typescript
+// When creating the noel instance
+const noel = new Noel({
+    noEventListenersWarning: false
+});
+```
 
 ### NPM scripts
 
