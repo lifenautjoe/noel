@@ -78,7 +78,7 @@ export class NoelEventImp implements NoelEvent {
         this.replayBuffer = null;
     }
 
-    clearListeners() {
+    removeAllListeners() {
         this.listeners = null;
     }
 

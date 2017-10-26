@@ -142,14 +142,14 @@ describe('Noel', () => {
         });
     });
 
-    describe('clearListeners(eventName: string)', () => {
+    describe('removeAllListenersForEvent(eventName: string)', () => {
         describe('when event has listeners', () => {
             it('should clear its listeners', () => {
                 const noel = new Noel();
                 const eventName = generateRandomString();
                 fillNoelWithRandomEventListeners(noel, eventName);
 
-                noel.clearListenersForEvent(eventName);
+                noel.removeAllListenersForEvent(eventName);
 
                 const event = noel['eventsMap'].get(eventName);
                 expect(event['listeners']).toBeNull();
@@ -161,7 +161,7 @@ describe('Noel', () => {
                 const noel = new Noel();
                 const eventName = generateRandomString();
 
-                noel.clearListenersForEvent(eventName);
+                noel.removeAllListenersForEvent(eventName);
 
                 expect(noel['eventsMap']).toBeNull();
             });

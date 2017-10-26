@@ -29,7 +29,7 @@ export interface Noel {
 
     removeListener(eventName: string, listener: NoelEventListener): void;
 
-    clearListenersForEvent(eventName: string): void;
+    removeAllListenersForEvent(eventName: string): void;
 
     getEvent(eventName: string): NoelEvent;
 
@@ -68,7 +68,7 @@ export interface NoelEvent {
 
     clearReplayBuffer(): void;
 
-    clearListeners(): void;
+    removeAllListeners(): void;
 
     setReplayBufferSize(replayBufferSize: number): void;
 
