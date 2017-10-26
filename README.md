@@ -132,7 +132,14 @@ When an event is emitted, no listeners have been set AND the replay was disabled
 const noel = new Noel({
     noEventListenersWarning: false
 });
+
+// ...
+
+// At runtime
+noel.disableNoEventListenersWarning();
 ```
+
+### Disabling the no event listeners warning
 
 ### NPM scripts
 
