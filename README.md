@@ -46,12 +46,17 @@ npm install noel
 
 ## Usage
 
-### Emit and listen to events
+### Create a noel instance
 
 ```typescript
 const Noel = require('Noel');
 
 const noel = new Noel();
+```
+
+### Emit and listen to events
+
+```typescript
 
 // Listen for an event
 noel.on('friday', partyAllNightLong);
@@ -64,17 +69,39 @@ noel.emit('friday', arg1, arg2 ....);
 
 ```typescript
 // Replay an event once
-noel.on('userChanged', updateAvatarPhoto).replay();
+noel.on(eventName, eventListener).replay();
 
 // Replay an event x amount of times
-noel.on('userChanged', updateAvatarPhoto).replay(x);
+noel.on(eventName, eventListener).replay(x);
 ```
 
-### Remove event listener
+### Remove one event listener
+
+```typescript
+noel.removeListener(eventName, eventListener);
+```
 
 ### Remove all event listeners
 
-### 
+```typescript
+noel.removeAllListeners(eventName, eventListener);
+```
+
+### Changing the event buffer size
+
+Or in human words, changing the amount of event emissions that are saved for replays.
+
+**Default is 1.**
+
+```typescript
+// When creating the noel instance
+const noel = new Noel({
+    replayBufferSize: aNewBufferSize
+});
+
+// In runtime
+noel.setReplayBufferSize(anotherBufferSize);
+```
 
 ## Advanced usage
 
