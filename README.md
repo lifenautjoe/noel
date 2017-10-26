@@ -44,7 +44,9 @@ Meaning that if the `userChanged` event was already fired, it will be replayed w
 npm install noel
 ```
 
-## Basic usage
+## Usage
+
+### Emit and listen to events
 
 ```typescript
 const Noel = require('Noel');
@@ -54,8 +56,7 @@ const noel = new Noel();
 // Listen for an event
 noel.on('friday', partyAllNightLong);
 
-// Listen for and event AND replay X number of emissions
-noel.on('userChanged', updateAvatarPhoto).replay(x);
+
 
 // Emit an event
 noel.emit('luckyNumbersChanged', 1, 5, 9 ...);
@@ -63,6 +64,26 @@ noel.emit('luckyNumbersChanged', 1, 5, 9 ...);
 // Remove listener
 noel.removeListener('friday', partyAllNightLong);
 ```
+
+### Replay events
+
+```typescript
+// Replay an event once
+noel.on('userChanged', updateAvatarPhoto).replay();
+
+// Replay an event x amount of times
+noel.on('userChanged', updateAvatarPhoto).replay(x);
+```
+
+### Remove event listener
+
+
+
+### Remove all event listeners
+
+
+
+### 
 
 ## Advanced usage
 
@@ -72,12 +93,15 @@ Continue reading on the library GitBook.
 
 ### NPM scripts
 
- - `npm t`: Run test suite
- - `npm start`: Runs `npm run build` in watch mode
- - `npm run test:watch`: Run test suite in [interactive watch mode](http://facebook.github.io/jest/docs/cli.html#watch)
- - `npm run test:prod`: Run linting and generate coverage
- - `npm run build`: Generate bundles and typings, create docs
- - `npm run lint`: Lints code
- - `npm run commit`: Commit using conventional commit style ([husky](https://github.com/typicode/husky) will tell you to use it if you haven't :wink:)
- 
- Author [Joel Hernandez](https://lifenautjoe.com)
+* `npm t`: Run test suite
+* `npm start`: Runs `npm run build` in watch mode
+* `npm run test:watch`: Run test suite in [interactive watch mode](http://facebook.github.io/jest/docs/cli.html#watch)
+* `npm run test:prod`: Run linting and generate coverage
+* `npm run build`: Generate bundles and typings, create docs
+* `npm run lint`: Lints code
+* `npm run commit`: Commit using conventional commit style \([husky](https://github.com/typicode/husky) will tell you to use it if you haven't :wink:\)
+
+  Author [Joel Hernandez](https://lifenautjoe.com)
+
+
+
