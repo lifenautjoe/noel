@@ -86,7 +86,7 @@ noel.removeListener(eventName, eventListener);
 noel.removeAllListeners(eventName, eventListener);
 ```
 
-### Changing the events buffer size
+### Changing the events replay buffer size
 
 Or in human words, changing the amount of event emissions that are saved for replays.
 
