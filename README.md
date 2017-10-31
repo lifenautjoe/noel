@@ -183,7 +183,12 @@ git clone git@github.com:lifenautjoe/noel.git
 * `npm run lint`: Lints code
 * `npm run commit`: Commit using conventional commit style \([husky](https://github.com/typicode/husky) will tell you to use it if you haven't :wink:\)
 
+## TODO
+
+* [x] 100% Relevant lines coverage
+* [x] Documentation
+* [ ] Website
+* [ ] 100% Branch coverage
+
 Author [Joel Hernandez](https://lifenautjoe.com)
-
-
 
