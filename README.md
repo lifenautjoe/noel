@@ -78,7 +78,7 @@ noel.disableReplay(anotherBufferSize);
 
 ### Enabling replay
 
-Please do note that** replay is enabled by default**, so this should only be necessary if it was disabled at runtime.
+Please do note that **replay is enabled by default**, so this should only be necessary if it was disabled at runtime.
 
 ```typescript
 // At runtime
