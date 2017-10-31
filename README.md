@@ -135,6 +135,8 @@ const noel = new Noel({
     replayBufferSize: aNewBufferSize
 });
 
+// ...
+
 // At runtime
 noel.setReplayBufferSize(anotherBufferSize);
 ```
@@ -163,7 +165,15 @@ Please do note that the** no event listeners warning is enabled by default**, so
 noel.enableNoEventListenersWarning();
 ```
 
-### NPM scripts
+## Development
+
+### Clone the repository
+
+```bash
+git clone git@github.com:lifenautjoe/noel.git
+```
+
+### Use npm commands
 
 * `npm t`: Run test suite
 * `npm start`: Runs `npm run build` in watch mode
@@ -173,7 +183,7 @@ noel.enableNoEventListenersWarning();
 * `npm run lint`: Lints code
 * `npm run commit`: Commit using conventional commit style \([husky](https://github.com/typicode/husky) will tell you to use it if you haven't :wink:\)
 
-  Author [Joel Hernandez](https://lifenautjoe.com)
+Author [Joel Hernandez](https://lifenautjoe.com)
 
 
 
