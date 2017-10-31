@@ -109,11 +109,15 @@ noel.removeAllListeners(eventName, eventListener);
 
 ### Clearing an event replay buffer
 
+If you would like to clear all saved **event** emissions for replay
+
 ```typescript
 noel.clearReplayBufferForEvent(eventName);
 ```
 
 ### Clearing all events replay buffers
+
+If you would like to clear all saved **events** emissions for replay
 
 ```typescript
 noel.clearEventsReplayBuffers();
