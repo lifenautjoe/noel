@@ -2,14 +2,13 @@
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
 
-import { NoelEventListenerManager } from './interfaces';
 import { NoelEventListener } from './types';
-import { NoelEventImp } from './event';
+import { NoelEvent } from './event';
 import { NoelEventReplayNotEnabled } from './errors';
 import NoelImp from './noel';
 
-export class NoelEventListenerManagerImp implements NoelEventListenerManager {
-    constructor(private listener: NoelEventListener, private event: NoelEventImp, private noel: NoelImp) {}
+export class NoelEventListenerManager {
+    constructor(private listener: NoelEventListener, private event: NoelEvent, private noel: NoelImp) {}
 
     remove() {
         // We remove it from noel instead of the event itself because noel will remove it

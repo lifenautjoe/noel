@@ -1,8 +1,8 @@
 import Noel from '../src/noel';
-import { NoelLoggerImp } from '../src/logger';
+import { NoelLogger } from '../src/logger';
 import { NoelBufferSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled, NoelReplayNotEnabledError } from '../src/errors';
-import { NoelEventListenerManagerImp } from '../src/event-listener-manager';
-import { NoelEventImp } from '../src/event';
+import { NoelEventListenerManager } from '../src/event-listener-manager';
+import { NoelEvent } from '../src/event';
 
 describe('Noel', () => {
     const defaultReplayEnabledVal = true;
@@ -38,7 +38,7 @@ describe('Noel', () => {
 
     describe('constructor(config)', () => {
         it('should override default config', () => {
-            const logger = new NoelLoggerImp();
+            const logger = new NoelLogger();
             const replay = false;
             const replayBufferSize = 20;
             const noEventListenersWarning = false;
@@ -89,7 +89,7 @@ describe('Noel', () => {
                 const noel = new Noel();
                 const eventName = generateRandomString();
                 const event = noel.getEvent(eventName);
-                expect(event).toBeInstanceOf(NoelEventImp);
+                expect(event).toBeInstanceOf(NoelEvent);
                 expect(noel['eventsMap'].get(eventName)).toBe(event);
             });
         });
@@ -136,7 +136,7 @@ describe('Noel', () => {
                 noel.on(eventName, listener);
                 noel.removeListener(eventName, listener);
                 const event = noel['eventsMap'].get(eventName);
-                expect(event).toBeInstanceOf(NoelEventImp);
+                expect(event).toBeInstanceOf(NoelEvent);
                 expect(event['listeners'].has(listener)).toBe(false);
             });
         });
@@ -623,7 +623,7 @@ describe('Noel', () => {
                 const eventListener = () => {};
                 noel.on(eventName, eventListener);
                 const event = noel['eventsMap'].get(eventName);
-                expect(event).toBeInstanceOf(NoelEventImp);
+                expect(event).toBeInstanceOf(NoelEvent);
                 expect(event['name']).toBe(eventName);
                 expect(event['listeners'].has(eventListener)).toBeTruthy();
             });
@@ -631,7 +631,7 @@ describe('Noel', () => {
             it('should return an EventListenerManager', () => {
                 const noel = new Noel();
                 const eventListenerManager = noel.on('anotherEvent', () => {});
-                expect(eventListenerManager).toBeInstanceOf(NoelEventListenerManagerImp);
+                expect(eventListenerManager).toBeInstanceOf(NoelEventListenerManager);
             });
         });
 
@@ -666,7 +666,7 @@ describe('Noel', () => {
                         eventListenerManager.remove();
 
                         const event = noel['eventsMap'].get(eventName);
-                        expect(event).toBeInstanceOf(NoelEventImp);
+                        expect(event).toBeInstanceOf(NoelEvent);
 
                         const eventListeners = event['listeners'];
                         otherListeners.forEach(otherListener => {

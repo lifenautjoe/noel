@@ -1,13 +1,14 @@
 /**
  * @author Joel Hernandez <lifenautjoe@gmail.com>
  */
-import { NoelEvent, NoelEventConfig, NoelEventListenerManager, NoelLogger } from './interfaces';
+import { NoelEventConfig } from './interfaces';
 import { NoelEventListener } from './types';
-import { NoelEventListenerManagerImp } from './event-listener-manager';
+import { NoelEventListenerManager } from './event-listener-manager';
 import { NoelBufferSizeNotValidError, NoelEventConfigError, NoelEventListenerError, NoelEventReplayNotEnabled } from './errors';
 import NoelImp from './noel';
+import { NoelLogger } from './logger';
 
-export class NoelEventImp implements NoelEvent {
+export class NoelEvent {
     private noel: NoelImp;
     private name: string;
     private replayEnabled: boolean;
@@ -61,7 +62,7 @@ export class NoelEventImp implements NoelEvent {
         if (typeof listener !== 'function') throw new NoelEventListenerError('Given listener is not a function');
         const listeners = this.getListeners();
         listeners.add(listener);
-        return new NoelEventListenerManagerImp(listener, this, this.noel);
+        return new NoelEventListenerManager(listener, this, this.noel);
     }
 
     removeListener(listener: NoelEventListener): void {

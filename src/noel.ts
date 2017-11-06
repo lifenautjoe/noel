@@ -2,18 +2,19 @@
 // import "core-js/fn/array.find"
 // ...
 
-import { Noel, NoelConfig, NoelEvent, NoelEventListenerManager, NoelLogger } from './interfaces';
+import { NoelConfig } from './interfaces';
 import { NoelEventListener } from './types';
 import { NoelBufferSizeNotValidError, NoelReplayNotEnabledError } from './errors';
-import { NoelEventImp } from './event';
-import { NoelLoggerImp } from './logger';
+import { NoelEvent } from './event';
+import { NoelLogger } from './logger';
+import { NoelEventListenerManager } from './event-listener-manager';
 
-const defaultLogger = new NoelLoggerImp();
+const defaultLogger = new NoelLogger();
 
-export class NoelImp implements Noel {
+export class Noel {
     private noEventListenersWarning: boolean;
 
-    private eventsMap: Map<string, NoelEventImp> | null = null;
+    private eventsMap: Map<string, NoelEvent> | null = null;
 
     private logger: NoelLogger;
 
@@ -53,7 +54,7 @@ export class NoelImp implements Noel {
         }
     }
 
-    removeEventListener(event: NoelEventImp, listener: NoelEventListener) {
+    removeEventListener(event: NoelEvent, listener: NoelEventListener) {
         event.removeListener(listener);
         const eventListenersCount = event.countListeners();
         if (eventListenersCount === 0) this.removeEvent(event.getName());
@@ -153,8 +154,8 @@ export class NoelImp implements Noel {
         }
     }
 
-    private makeEvent(eventName: string): NoelEventImp {
-        return new NoelEventImp({
+    private makeEvent(eventName: string): NoelEvent {
+        return new NoelEvent({
             name: eventName,
             replay: this.replayEnabled,
             replayBufferSize: this.replayBufferSize,
@@ -194,12 +195,12 @@ export class NoelImp implements Noel {
         }
     }
 
-    private getEvents(): IterableIterator<NoelEventImp> {
+    private getEvents(): IterableIterator<NoelEvent> {
         const eventsMap = this.getEventsMap();
         return eventsMap.values();
     }
 
-    private getEventsMap(): Map<string, NoelEventImp> {
+    private getEventsMap(): Map<string, NoelEvent> {
         return this.eventsMap || (this.eventsMap = new Map());
     }
 }
@@ -210,4 +211,4 @@ export * from './interfaces';
 
 export * from './types';
 
-export default NoelImp;
+export default Noel;

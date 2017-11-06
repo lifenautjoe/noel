@@ -3,7 +3,7 @@
  */
 
 import { BaseError } from 'make-error';
-import { NoelEventImp } from './event';
+import { NoelEvent } from './event';
 
 export class NoelError extends BaseError {
     constructor(message: string) {
@@ -27,7 +27,7 @@ export class NoelEventError extends NoelError {
 }
 
 export class NoelEventReplayNotEnabled extends NoelEventError {
-    constructor(event: NoelEventImp) {
+    constructor(event: NoelEvent) {
         super(`Replay for event "${event.getName()}" is not enabled`);
         this.name = 'NoelEventReplayNotEnabled';
     }
