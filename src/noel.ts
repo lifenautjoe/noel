@@ -11,7 +11,7 @@ import { NoelEventListenerManager } from './event-listener-manager';
 
 const defaultLogger = new NoelLogger();
 
-export class Noel {
+export default class Noel {
     private noEventListenersWarning: boolean;
 
     private eventsMap: Map<string, NoelEvent> | null = null;
@@ -204,11 +204,3 @@ export class Noel {
         return this.eventsMap || (this.eventsMap = new Map());
     }
 }
-
-export * from './errors';
-
-export * from './interfaces';
-
-export * from './types';
-
-export default Noel;

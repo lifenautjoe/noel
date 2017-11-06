@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import sourceMaps from 'rollup-plugin-sourcemaps'
-import camelCase from 'lodash.camelcase'
+import capitalize from 'lodash.capitalize'
 
 const pkg = require('./package.json');
 
@@ -10,7 +10,7 @@ const libraryName = 'noel';
 export default {
     entry: `compiled/${libraryName}.js`,
     targets: [
-        {dest: pkg.main, moduleName: camelCase(libraryName), format: 'umd'},
+        {dest: pkg.main, moduleName: capitalize(libraryName), format: 'umd'},
         {dest: pkg.module, format: 'es'},
     ],
     sourcemap: true,
