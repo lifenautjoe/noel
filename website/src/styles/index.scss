@@ -4,14 +4,24 @@
 html, body {
     height: 100%;
     width: 100%;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-family: 'Roboto', sans-serif;
     text-align: center;
     font-weight: lighter;
 }
 
+h1 {
+    font-size: 140%;
+}
+
 a{
     color: inherit;
+}
+
+code{
+    font-size: 70%;
+    text-align: left;
+    padding: 1rem !important;
 }
 
 button{
@@ -45,24 +55,33 @@ button{
 }
 
 
+mark{
+    padding: 0.2rem;
+    line-height: 2rem;
+}
+
 .noel{
-    height:100%;
     width: 100%;
     max-width: 968px;
     margin: 0 auto;
     display: flex;
-    justify-content: center;
-    flex-direction: column;position: relative;
+    flex-direction: column;
+    position: relative;
     align-items: center;
+    overflow: auto;
 }
 
     .noel-content{
         width: 90%;
-        max-width: 600px;
+        max-width: 700px;
+        top: 8%;
     }
 
     .noel-logo{
-        width: 50%;
+        padding: 1.5rem;
+        min-height: 220px;
+        height: 25%;
+        width: auto;
         display: flex;
         align-items: center;
         position: relative;
@@ -70,14 +89,15 @@ button{
     }
 
         .noel-logo__circle{
-            height: auto;
-            width: 100%;
+            height: 75%;
+            width: auto;
             animation: rotating 7s linear infinite;
         }
 
         .noel-logo__text{
             position: absolute;
             left: 40%;
-            top: 35%;
-            width: 85%;
+            top: 40%;
+            height: 30%;
+            width: auto;
         }

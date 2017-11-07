@@ -31,19 +31,37 @@
         A universal, human-centric, replayable event emitter.
     </h1>
     <div class="noel-description">
-        The world just like software is full of events. Sometimes these events while we are busy doing other things.
-        Wouldn't it be nice to ave a way to replay all events?
+        <p>
+            The world just like software is full of events. Sometimes these events while we are busy doing other things.
+            Wouldn't it be nice to have a way to replay events?
 
-        Noel aims to be that way.
+            <strong>Noel is that way.</strong>
+        </p>
+        <p>
+            <mark>By being able to replay events we can design reactive systems that can handle events
+                generically without having to worry about when the events occur.
+            </mark>
+        </p>
 
-        <div class="yellow-marker">By being able to replay events we can design reactive systems that can handle events
-            generically without having to worhry about the timing of events.
-        </div>
+        <p>
+            For example, code like
+        </p>
+        <pre>
+            <code class="typescript">
+// Check if there is a user in case we missed the userChanged event
+const user = sessionService.getUser();
+if(user) updateAvatarPhoto(user)
 
-        For example, code like
-        <div class="code">
-
-        </div>
+// Listen for further changes
+sessionService.listenUserChanged(updateAvatarPhoto);
+            </code>
+        </pre>
+        <p>
+            becomes
+        </p>
+        <pre>
+            <code class="typescript">sessionService.listenUserChanged(doSomethingWithUser).replay();</code>
+        </pre>
     </div>
     <div class="noel-read-more">
         Interested?
@@ -55,8 +73,8 @@
         Joel Hernandez
     </div>
 </div>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/languages/typescript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
+        integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/typescript.min.js"></script>
 </body>
 </html>

@@ -1,7 +1,9 @@
 
 require('normalize.css/normalize.css');
-require('./styles/index.scss');
+require('./assets/highlight.css');
 
 document.addEventListener("DOMContentLoaded", () => {
     hljs.initHighlightingOnLoad();
 });
+
+require('./styles/index.scss');
