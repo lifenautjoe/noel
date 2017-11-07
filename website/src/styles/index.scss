@@ -1,0 +1,83 @@
+* { box-sizing: border-box; }
+
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    font-weight: lighter;
+}
+
+a{
+    color: inherit;
+}
+
+button{
+    cursor: pointer;
+    outline:none;
+    font-weight: 300;
+    background-color: #1dce94;
+    border: none;
+    border-radius: 500px;
+    color: white;
+    padding:0.5rem 1rem;
+    transition: all 0.3s;
+
+    &:hover{
+        color: #1dce94;
+        background-color: white;
+    }
+
+    &:active{
+        background-color: #cbcbcb;
+    }
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.noel{
+    height:100%;
+    width: 100%;
+    max-width: 968px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;position: relative;
+    align-items: center;
+}
+
+    .noel-content{
+        width: 90%;
+        max-width: 600px;
+    }
+
+    .noel-logo{
+        width: 50%;
+        display: flex;
+        align-items: center;
+        position: relative;
+        justify-content: center;
+    }
+
+        .noel-logo__circle{
+            height: auto;
+            width: 100%;
+            animation: rotating 7s linear infinite;
+        }
+
+        .noel-logo__text{
+            position: absolute;
+            left: 40%;
+            top: 35%;
+            width: 85%;
+        }
