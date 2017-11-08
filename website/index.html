@@ -35,7 +35,7 @@
             The world just like software is full of events. Sometimes these events while we are busy doing other things.
             Wouldn't it be nice to have a way to replay events?
 
-            <strong>Noel is that way.</strong>
+            <strong>Noel is the way.</strong>
         </p>
         <p>
             <mark>By being able to replay events we can design reactive systems that can handle events
@@ -56,9 +56,9 @@ if(user) updateAvatarPhoto(user)
 sessionService.listenUserChanged(updateAvatarPhoto);
             </code>
         </pre>
-        <p>
-            becomes
-        </p>
+        <span>
+            can become
+        </span>
         <pre>
             <code class="typescript">sessionService.listenUserChanged(doSomethingWithUser).replay();</code>
         </pre>

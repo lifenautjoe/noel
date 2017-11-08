@@ -18,6 +18,11 @@ a{
     color: inherit;
 }
 
+pre{
+    margin: 0;
+    padding: 0;
+}
+
 code{
     font-size: 70%;
     text-align: left;
@@ -77,27 +82,31 @@ mark{
         top: 8%;
     }
 
+    $ratio: 1.5;
+
     .noel-logo{
-        padding: 1.5rem;
-        min-height: 220px;
-        height: 25%;
-        width: auto;
-        display: flex;
-        align-items: center;
+        margin-top: 4rem;
+        margin-bottom: 2rem;
         position: relative;
-        justify-content: center;
+        margin-right: -1.5rem * $ratio;
+        z-index: 1;
+        @media only screen and (min-width : 992px) {
+            margin-top: 7rem;
+        }
     }
 
         .noel-logo__circle{
-            height: 75%;
-            width: auto;
+            z-index: 1;
+            position: absolute;
+            left: -1.5rem * $ratio;
+            height: 5rem * $ratio;
             animation: rotating 7s linear infinite;
+            top: -1.3rem * $ratio;
         }
 
         .noel-logo__text{
-            position: absolute;
-            left: 40%;
-            top: 40%;
-            height: 30%;
-            width: auto;
+            position: relative;
+            z-index: 2;
+            height: 25%;
+            min-height: 2.5rem * $ratio;
         }
