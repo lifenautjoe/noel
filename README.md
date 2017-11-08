@@ -64,6 +64,16 @@ noel.on('friday', partyAllNightLong);
 noel.emit('friday', arg1, arg2 ....);
 ```
 
+### Replaying events
+
+```typescript
+// Replay an event once
+noel.on(eventName, eventListener).replay();
+
+// Replay an event x amount of times
+noel.on(eventName, eventListener).replay(x);
+```
+
 ### Disabling replay
 
 ```typescript
@@ -83,16 +93,6 @@ Please do note that **replay is enabled by default**, so this should only be nec
 ```typescript
 // At runtime
 noel.enableReplay(anotherBufferSize);
-```
-
-### Replaying events
-
-```typescript
-// Replay an event once
-noel.on(eventName, eventListener).replay();
-
-// Replay an event x amount of times
-noel.on(eventName, eventListener).replay(x);
 ```
 
 ### Removing an event listener
