@@ -14,6 +14,11 @@ h1 {
     font-size: 140%;
 }
 
+h2{
+    font-size: 120%;
+    margin-top: 2.1rem;
+}
+
 a{
     color: inherit;
 }
@@ -29,24 +34,28 @@ code{
     padding: 1rem !important;
 }
 
-button{
+$button-color: #fb153d;
+
+.github-button-container{
+    margin-top:1rem;
+}
+
+.btn{
+    margin: 1rem;
+    display: block;
     cursor: pointer;
     outline:none;
     font-weight: 300;
-    background-color: #1dce94;
-    border: none;
-    border-radius: 500px;
     color: white;
-    padding:0.5rem 1rem;
+    background: $button-color;
+    border-radius: 500px;
+    text-decoration: none;
+    padding:0.8rem 2rem;
     transition: all 0.3s;
+    font-size: 80%;
 
-    &:hover{
-        color: #1dce94;
-        background-color: white;
-    }
-
-    &:active{
-        background-color: #cbcbcb;
+    &:hover, &:active{
+        background-color: #CE1236;
     }
 }
 
@@ -76,37 +85,66 @@ mark{
     overflow: auto;
 }
 
-    .noel-content{
-        width: 90%;
-        max-width: 700px;
-        top: 8%;
+.noel-content{
+    width: 90%;
+    max-width: 700px;
+    top: 8%;
+}
+
+$ratio: 1.5;
+
+.noel-logo{
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    position: relative;
+    margin-right: -1.5rem * $ratio;
+    z-index: 1;
+    @media only screen and (min-width : 992px) {
+        margin-top: 7rem;
+    }
+}
+
+.noel-logo__circle{
+    z-index: 1;
+    position: absolute;
+    left: -1.5rem * $ratio;
+    height: 5rem * $ratio;
+    animation: rotating 7s linear infinite;
+    top: -1.3rem * $ratio;
+}
+
+.noel-logo__text{
+    position: relative;
+    z-index: 2;
+    height: 25%;
+    min-height: 2.5rem * $ratio;
+}
+
+code{
+    display: block;
+}
+
+.code{
+    margin: 1rem 0;
+    background: #002b36;
+    color: #839496;
+}
+
+    .code-highlight{
+        color: #00cc06;
     }
 
-    $ratio: 1.5;
+.noel-read-more{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-    .noel-logo{
-        margin-top: 4rem;
-        margin-bottom: 2rem;
-        position: relative;
-        margin-right: -1.5rem * $ratio;
-        z-index: 1;
-        @media only screen and (min-width : 992px) {
-            margin-top: 7rem;
-        }
-    }
+.noel-author{
+    padding: 2rem;
+    font-size: 80%;
+}
 
-        .noel-logo__circle{
-            z-index: 1;
-            position: absolute;
-            left: -1.5rem * $ratio;
-            height: 5rem * $ratio;
-            animation: rotating 7s linear infinite;
-            top: -1.3rem * $ratio;
-        }
-
-        .noel-logo__text{
-            position: relative;
-            z-index: 2;
-            height: 25%;
-            min-height: 2.5rem * $ratio;
-        }
+.hljs{
+    border-radius: 3px;
+}

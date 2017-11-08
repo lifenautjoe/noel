@@ -28,9 +28,22 @@
 </div>
 <div class="noel-content">
     <h1 class="noel-title">
-        A universal, human-centric, replayable event emitter.
+        A universal, human-centric, replayable javascript event emitter.
     </h1>
+
+    <div class="noel-read-more">
+        <div class="github-button-container">
+            <a class="github-button" href="https://github.com/lifenautjoe/noel" data-show-count="true"
+               aria-label="Star lifenautjoe/webpack3-starter on GitHub">Star</a>
+        </div>
+    </div>
+
+    <div class="noel-read-more">
+        <h2>Installation</h2>
+        <pre><code>$ npm install noel</code></pre>
+    </div>
     <div class="noel-description">
+        <h2>Motivation</h2>
         <p>
             The world just like software is full of events. Sometimes these events while we are busy doing other things.
             Wouldn't it be nice to have a way to replay events?
@@ -46,33 +59,28 @@
         <p>
             For example, code like
         </p>
-        <pre>
-            <code class="typescript">
-// Check if there is a user in case we missed the userChanged event
+        <pre><code class="typescript">// Check if there is a user in case we missed the userChanged event
 const user = sessionService.getUser();
 if(user) updateAvatarPhoto(user)
 
 // Listen for further changes
-sessionService.listenUserChanged(updateAvatarPhoto);
-            </code>
-        </pre>
-        <span>
+sessionService.listenUserChanged(updateAvatarPhoto);</code></pre>
+        <p>
             can become
-        </span>
-        <pre>
-            <code class="typescript">sessionService.listenUserChanged(doSomethingWithUser).replay();</code>
-        </pre>
+        </p>
+        <pre><code class="typescript">sessionService.listenUserChanged(doSomethingWithUser).replay();</code></pre>
     </div>
+    <br>
     <div class="noel-read-more">
-        Interested?
-        <button>
-            Read more on GitHub
-        </button>
+        <a href="asdas" class="btn">
+            Read more @ Github
+        </a>
     </div>
     <div class="noel-author">
-        Joel Hernandez
+        A project of <a href="https://lifenautjoe.com">@lifenautjoe</a>
     </div>
 </div>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
         integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/typescript.min.js"></script>
