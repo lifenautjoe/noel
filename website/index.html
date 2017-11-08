@@ -37,38 +37,18 @@
                aria-label="Star lifenautjoe/webpack3-starter on GitHub">Star</a>
         </div>
     </div>
-
     <div class="noel-read-more">
         <h2>Installation</h2>
         <pre><code>$ npm install noel</code></pre>
     </div>
-    <div class="noel-description">
-        <h2>Motivation</h2>
-        <p>
-            The world just like software is full of events. Sometimes these events while we are busy doing other things.
-            Wouldn't it be nice to have a way to replay events?
+    <div class="noel-read-more">
+        <h2>Basic usage</h2>
+        <pre><code class="typescript">const Noel = require('Noel');
+const noel = new Noel();
 
-            <strong>Noel is the way.</strong>
-        </p>
-        <p>
-            <mark>By being able to replay events we can design reactive systems that can handle events
-                generically without having to worry about when the events occur.
-            </mark>
-        </p>
+noel.emit('friday', arg1, arg2 ....);
 
-        <p>
-            For example, code like
-        </p>
-        <pre><code class="typescript">// Check if there is a user in case we missed the userChanged event
-const user = sessionService.getUser();
-if(user) updateAvatarPhoto(user)
-
-// Listen for further changes
-sessionService.listenUserChanged(updateAvatarPhoto);</code></pre>
-        <p>
-            can become
-        </p>
-        <pre><code class="typescript">sessionService.listenUserChanged(doSomethingWithUser).replay();</code></pre>
+noel.on('friday', partyAllNightLong).replay();</code></pre>
     </div>
     <br>
     <div class="noel-read-more">
