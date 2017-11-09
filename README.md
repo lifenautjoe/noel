@@ -155,7 +155,7 @@ noel.disableNoEventListenersWarning();
 
 ### Enabling the no event listeners warning
 
-Please do note that the** no event listeners warning is enabled by default**, so this should only be necessary if it was disabled at runtime.
+Please do note that the **no event listeners warning is enabled by default**, so this should only be necessary if it was disabled at runtime.
 
 ```typescript
 noel.enableNoEventListenersWarning();
