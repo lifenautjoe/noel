@@ -8,11 +8,9 @@ A universal, human-centric, replayable event emitter.
 
 ## Motivation
 
-The world just like software is full of events. Sometimes these events while we are busy doing other things. Wouldn't it be nice to have a way to replay all events?
+The world just like software is full of events. Sometimes these events occur while we are busy doing other things. Wouldn't it be nice to have a way to replay all events? Noel is the way.
 
-Noel aims to be that way.
-
-By being able to replay events we can design reactive systems that can handle events generically without having to worry about the timing of events.
+By being able to replay events we can design reactive systems without having to worry about timing.
 
 For example, code like
 
