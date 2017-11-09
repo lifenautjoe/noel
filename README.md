@@ -32,7 +32,7 @@ Meaning that if the `userChanged` event was already fired, it will be replayed w
 ## Features
 
 * Event replaying. Never miss a beat.
-* Human API. No useless concepts to try to make sense of.
+* API designed for humans. No useless concepts to try to make sense of.
 
 ## Installation
 
