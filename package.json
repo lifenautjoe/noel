@@ -1,8 +1,22 @@
 {
   "name": "noel",
-  "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "version": "1.0.0",
+  "description": "A universal, human-centric, replayable javascript event emitter.",
+  "keywords": [
+      "event-emitter",
+      "emitter",
+      "replayable-emitter",
+      "replay-event",
+      "events",
+      "event",
+      "eventemitter",
+      "fast-emitter",
+      "event-dispatcher",
+      "dispatcher",
+      "event-manager",
+      "reactive",
+      "evented"
+  ],
   "main": "dist/noel.umd.js",
   "module": "dist/noel.es5.js",
   "typings": "dist/types/noel.d.ts",
@@ -12,7 +26,7 @@
   "author": "Joel Hernandez <lifenautjoe@gmail.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/lifenautjoe/noel"
   },
   "license": "MIT",
   "engines": {
