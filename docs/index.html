@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Noel | Event Emitter</title>
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" value="Noel | Replayable Event Emitter">
+    <meta name="Description" content="A universal, human-centric, replayable javascript event emitter."/>
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Noel | Replayable Event Emitter"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content="https://lifenautjoe.github.io/noel/"/>
+    <meta property="og:image" content="https://i.snag.gy/Vt3Czk.jpg"/>
+    <meta property="og:description" content="A universal, human-centric, replayable javascript event emitter."/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#fff"><meta name="application-name" content="Webpack starter basic"><link rel="apple-touch-icon" sizes="57x57" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-57x57.png"><link rel="apple-touch-icon" sizes="60x60" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-60x60.png"><link rel="apple-touch-icon" sizes="72x72" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-72x72.png"><link rel="apple-touch-icon" sizes="76x76" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-76x76.png"><link rel="apple-touch-icon" sizes="114x114" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-114x114.png"><link rel="apple-touch-icon" sizes="120x120" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-120x120.png"><link rel="apple-touch-icon" sizes="144x144" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-144x144.png"><link rel="apple-touch-icon" sizes="152x152" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-icon-180x180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Webpack starter basic"><link rel="icon" type="image/png" sizes="32x32" href="icons-81332340c3c98af403352adba11cc5a6/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="icons-81332340c3c98af403352adba11cc5a6/favicon-16x16.png"><link rel="shortcut icon" href="icons-81332340c3c98af403352adba11cc5a6/favicon.ico"><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-320x460.png"><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-640x920.png"><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-640x1096.png"><link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-750x1294.png"><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-1182x2208.png"><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-1242x2148.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 1)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-748x1024.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 1)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-768x1004.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-1496x2048.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" href="icons-81332340c3c98af403352adba11cc5a6/apple-touch-startup-image-1536x2008.png"><link href="styles.fa36b532821b1af3502e58040756f892.css" rel="stylesheet"></head>
+<body class="noel">
+<div class="noel-logo">
+    <img class="noel-logo__circle"
+         src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTEuMTQgMjA4LjUiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDpub25lO3N0cm9rZTojMDAwO3N0cm9rZS1taXRlcmxpbWl0OjEwO30uY2xzLTJ7ZmlsbDojZWQxZTc5O30uY2xzLTN7ZmlsbDojMWZlYTgwO30uY2xzLTR7ZmlsbDojZTdmZjAwO30uY2xzLTV7ZmlsbDojMjNhNGU1O308L3N0eWxlPjwvZGVmcz48dGl0bGU+bm9lbC1jaXJjbGU8L3RpdGxlPjxnIGlkPSJMYXllcl8yIiBkYXRhLW5hbWU9IkxheWVyIDIiPjxnIGlkPSJMYXllcl8xLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMSI+PGNpcmNsZSBjbGFzcz0iY2xzLTEiIGN4PSIxMDQuODIiIGN5PSIxMDIiIHI9IjEwMS41Ii8+PHJlY3QgY2xhc3M9ImNscy0yIiB4PSIxNDEuODIiIHk9IjUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjQuNjcgLTcyLjA3KSByb3RhdGUoMzApIi8+PHJlY3QgY2xhc3M9ImNscy0zIiB4PSIwLjgyIiB5PSI3NyIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNC45MyAwLjMpIHJvdGF0ZSgxMC40MikiLz48cmVjdCBjbGFzcz0iY2xzLTQiIHg9IjEwNy4zMiIgeT0iMTk4LjUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIvPjxyZWN0IGNsYXNzPSJjbHMtNSIgeD0iMjAwLjMyIiB5PSIxMDguNSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMy45MiAtMzUuMjcpIHJvdGF0ZSgxMC40MikiLz48L2c+PC9nPjwvc3ZnPg=="
+         alt="noel logo circle">
+    <img class="noel-logo__text"
+         src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNzkuMjQgNTkuNDIiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojMTRjNmVmO308L3N0eWxlPjwvZGVmcz48dGl0bGU+bm9lbC10ZXh0PC90aXRsZT48ZyBpZD0iTGF5ZXJfMiIgZGF0YS1uYW1lPSJMYXllciAyIj48ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTcuMTMsNy43MkgxOS4zN2w5LjI5LDIxLjc1LDIuODgsMTAuMjIuMjktLjA3LS4xNS04Ljc5TDM0LjkyLDcuNzJINDcuNzRsLTcuMTMsNTFoLTEzTDE4Ljg3LDM4LjYxbC0zLTEwLjIyLS4yOS4wNy4xNSw5Ljg2TDEyLjg5LDU4LjdIMFoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik01Mi4yNywyNC41QzU0LDEyLjc2LDY1LjIzLDcsNzUuODIsN1M5Ni4yLDEyLjgzLDk0LjU0LDI0LjVMOTIsNDEuOTJjLTEuNjYsMTEuNjctMTIuNTMsMTcuNS0yMy42MiwxNy41LTEwLjU4LDAtMjAuMy01LjgzLTE4LjY1LTE3LjVaTTYyLjY0LDQxLjkyYy0uNSwzLjY3LDMuMzEsNS41NSw3LjIsNS41NSw0LjE4LDAsOC43MS0xLjg4LDkuMjktNS45MUw4MS42NSwyNC41Yy41OC0zLjgyLTMtNS43Ni03LjItNS43NnMtOC43MSwxLjk0LTkuMjksNS43NloiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMTMuODMsMjcuNDVIMTM0LjVMMTMyLjkxLDM4LjlIMTEyLjI1bC0xLjA4LDcuNjNoMjIuNDZMMTMyLDU4LjdIOTYuNDhsNy4xMy01MWgzNS41bC0xLjczLDEyLjE3SDExNC45MVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xNDUuOTQsNy43MmgxM0wxNTMuNSw0NmgyMC43NEwxNzIuNTEsNTguN2gtMzMuN1oiLz48cGF0aCBkPSJNMTIuMTMuNzJIMjQuMzdsOS4yOSwyMS43NSwyLjg4LDEwLjIyLjI5LS4wNy0uMTUtOC43OUwzOS45Mi43Mkg1Mi43NGwtNy4xMyw1MWgtMTNMMjMuODcsMzEuNjFsLTMtMTAuMjItLjI5LjA3LjE1LDkuODZMMTcuODksNTEuN0g1WiIvPjxwYXRoIGQ9Ik01Ny4yNywxNy41QzU5LDUuNzYsNzAuMjMsMCw4MC44MiwwUzEwMS4yLDUuODMsOTkuNTQsMTcuNUw5NywzNC45MmMtMS42NiwxMS42Ny0xMi41MywxNy41LTIzLjYyLDE3LjUtMTAuNTgsMC0yMC4zLTUuODMtMTguNjUtMTcuNVpNNjcuNjQsMzQuOTJjLS41LDMuNjcsMy4zMSw1LjU1LDcuMiw1LjU1LDQuMTgsMCw4LjcxLTEuODgsOS4yOS01LjkxTDg2LjY1LDE3LjVjLjU4LTMuODItMy01Ljc2LTcuMi01Ljc2cy04LjcxLDEuOTQtOS4yOSw1Ljc2WiIvPjxwYXRoIGQ9Ik0xMTguODMsMjAuNDVIMTM5LjVMMTM3LjkxLDMxLjlIMTE3LjI1bC0xLjA4LDcuNjNoMjIuNDZMMTM3LDUxLjdoLTM1LjVsNy4xMy01MWgzNS41bC0xLjczLDEyLjE3SDExOS45MVoiLz48cGF0aCBkPSJNMTUwLjk0LjcyaDEzTDE1OC41LDM5aDIwLjc0TDE3Ny41MSw1MS43aC0zMy43WiIvPjwvZz48L2c+PC9zdmc+"
+         alt="noel logo text">
+</div>
+<div class="noel-content">
+    <h1 class="noel-title">
+        A universal, human-centric, replayable javascript event emitter.
+    </h1>
+    <div class="noel-read-more">
+        <div class="github-button-container">
+            <a class="github-button" href="https://github.com/lifenautjoe/noel" data-show-count="true"
+               aria-label="Star lifenautjoe/webpack3-starter on GitHub">Star</a>
+        </div>
+    </div>
+    <div class="noel-read-more">
+        <h2>Motivation</h2>
+        <p>
+            The world just like software is full of events. Sometimes these events occur while we are busy doing other things.
+            Wouldn't it be nice to have a way to replay all events?
+
+            <strong>Noel is the way.</strong>
+        </p>
+        <p>
+            <mark>
+                By being able to replay events we can design reactive systems without having to worry about timing.
+            </mark>
+        </p>
+    </div>
+    <div class="noel-read-more">
+        <h2>Installation</h2>
+        <pre><code>$ npm install noel</code></pre>
+    </div>
+    <div class="noel-read-more">
+        <h2>Basic usage</h2>
+        <pre><code class="typescript">const Noel = require('Noel');
+const noel = new Noel();
+
+noel.emit('friday', arg1, arg2 ....);
+
+noel.on('friday', partyAllNightLong).replay();</code></pre>
+    </div>
+    <br>
+    <div class="noel-read-more">
+        <a href="https://github.com/lifenautjoe/noel" class="btn">
+            Read more @ Github
+        </a>
+    </div>
+    <div class="noel-author">
+        A project of <a href="https://lifenautjoe.com">@lifenautjoe</a>
+    </div>
+</div>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
+        integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/typescript.min.js"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-101423651-3"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-101423651-3');
+</script>
+<script type="text/javascript" src="main.e747374463832d9a4625.js"></script></body>
+</html>
