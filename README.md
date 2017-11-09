@@ -1,10 +1,8 @@
-# Noel
+<img alt="Noel logo" src="https://github.com/lifenautjoe/noel/blob/master/noel-logo.png?raw=true" width="250">
 
 A universal, human-centric, replayable event emitter.
 
 [![Build Status](https://travis-ci.org/lifenautjoe/noel.svg?branch=master)](https://travis-ci.org/lifenautjoe/noel) ![Human Friendly](https://img.shields.io/badge/human-friendly-brightgreen.svg) [![Coverage Status](https://coveralls.io/repos/github/lifenautjoe/noel/badge.svg?branch=master)](https://coveralls.io/github/lifenautjoe/noel?branch=master)
-
-## \[Work in progress\]
 
 ## Motivation
 
