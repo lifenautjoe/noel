@@ -93,7 +93,7 @@ module.exports = {
             // favicon background color (see https://github.com/haydenbleasel/favicons#usage)
             background: '#fff',
             // favicon app title (see https://github.com/haydenbleasel/favicons#usage)
-            title: 'Webpack starter basic',
+            title: 'Noel | Replayable Event Emitter',
 
             // which icons should be generated (see https://github.com/haydenbleasel/favicons#usage)
             icons: {
