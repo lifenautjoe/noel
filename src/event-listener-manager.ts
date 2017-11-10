@@ -16,9 +16,10 @@ export class NoelEventListenerManager {
         this.noel.removeEventListener(this.event, this.listener);
     }
 
-    replay(bufferSize: number): NoelEventListenerManager {
+    replay(bufferSize?: number): NoelEventListenerManager {
         const event = this.event;
         if (!event.getReplayIsEnabled()) throw new NoelEventReplayNotEnabled(event);
+        if (typeof bufferSize === 'undefined') bufferSize = 1;
         const actualBufferSize = event.getReplayBufferSize();
         if (bufferSize > actualBufferSize) {
             const logger = event.getLogger();
