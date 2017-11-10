@@ -119,6 +119,14 @@ noel.enableReplay(anotherBufferSize);
 noel.removeListener(eventName, eventListener);
 ```
 
+or if you save a reference to the `eventManager`
+
+```typescript
+const eventManager = noel.on('myEvent', eventListener);
+// ... 
+eventManager.remove();
+```
+
 ### Removing all event listeners
 
 ```typescript
