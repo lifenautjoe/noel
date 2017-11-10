@@ -1,6 +1,6 @@
 {
   "name": "noel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A universal, human-centric, replayable javascript event emitter.",
   "keywords": [
       "event-emitter",
